@@ -605,6 +605,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>UART</GroupName>
+          <Files>
+            <File>
+              <FileName>uart.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\UART\uart.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>uart.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\UART\uart.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::Device</GroupName>
         </Group>
         <Group>
@@ -624,6 +639,12 @@
         </targetInfos>
       </component>
       <component Cclass="Drivers" Cgroup="ADC" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
+        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+        <targetInfos>
+          <targetInfo name="Target 1"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Drivers" Cgroup="DMA" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
         <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
