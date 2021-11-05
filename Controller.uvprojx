@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_MDR1986VE1T</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865</IncludePath>
+              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865;.\RCC</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -616,6 +616,36 @@
               <FileName>uart.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\UART\uart.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>HEF4051</GroupName>
+          <Files>
+            <File>
+              <FileName>hef4051.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\HEF4051\hef4051.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>hef4051.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\HEF4051\hef4051.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RCC</GroupName>
+          <Files>
+            <File>
+              <FileName>RCC.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\RCC\RCC.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>RCC.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\RCC\RCC.h</FilePath>
             </File>
           </Files>
         </Group>

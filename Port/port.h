@@ -18,7 +18,8 @@ extern "C"
 
 class PortMapIO{
 	public:
-		PortMapIO ();
+		
+    PortMapIO();
 		PortMapIO (MDR_PORT_TypeDef *port, uint16_t pin);
 	
     PortMapIO (MDR_PORT_TypeDef *port, uint16_t PORT_Pin, PORT_OE_TypeDef PORT_OE, PORT_PULL_UP_TypeDef PORT_PULL_UP, \

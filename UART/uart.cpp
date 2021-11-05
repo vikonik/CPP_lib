@@ -53,7 +53,6 @@ void UART::ITConfig(MDR_UART_TypeDef* UARTx, uint32_t UART_IT, FunctionalState N
   {
     UARTx->IMSC &= ~UART_IT;
   }
-NVIC_EnableIRQ
 }
 
 /**/
@@ -79,14 +78,14 @@ void UART::sendByte(uint8_t byte){
 void UART::sendBytes(uint8_t *data, uint16_t size){
 
 	while (size--){
-	SendByte((uint8_t)*data++);
+    sendByte((uint8_t)*data++);
 	}
+  while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY ) );//UART_FLAG_TXFE!= SET
 }
 /**/
 void UART::sendString(char *data){
-
 	while (*data){
-	SendByte((uint8_t)*data++);
+    sendByte((uint8_t)*data++);
 	}
 	while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY ) );//UART_FLAG_TXFE!= SET
 }

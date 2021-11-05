@@ -5,6 +5,17 @@
 class UART{
 public:
 UART(MDR_UART_TypeDef* UARTx, uint32_t UART_BaudRate, uint16_t UART_WordLength, uint16_t UART_StopBits,uint16_t UART_Parity, uint16_t UART_FIFOMode, uint16_t UART_HardwareFlowControl   );
+/**/
+void ITConfig(MDR_UART_TypeDef* UARTx, uint32_t UART_IT, FunctionalState NewState);
+/**/
+void enableIRQ();
+/**/
+void sendByte(uint8_t byte);
+/**/
+void sendBytes(uint8_t *data, uint16_t size);
+/**/
+void sendString(char *data);
+
 
 private:
 MDR_UART_TypeDef* currentUART;
