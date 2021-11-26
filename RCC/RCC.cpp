@@ -36,13 +36,13 @@ MDR_RST_CLK->PER_CLOCK &=~0x08;
 		поэтому конфигурим как RST_CLK_HSE_Bypass
 		частота работы 8МГц
 	*/
-	RST_CLK_HSEconfig(RST_CLK_HSE_Bypass );
+	RST_CLK_HSEconfig(RST_CLK_HSE_ON );
 	if (RST_CLK_HSEstatus() == SUCCESS) /* Good HSE clock */
 		{
 			/* Select HSE clock as CPU_PLL input clock source */
 			/* Set PLL multiplier to 1 */
 uint32_t tmp = fclk_MHz * 1000000 / HSE_Value; 
-if(tmp > 16) tmp = 16;
+if(tmp > 15) tmp = 15;
 
 			RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, tmp);
 			/* Enable CPU_PLL */

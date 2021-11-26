@@ -177,7 +177,7 @@ void PortMapIO::setPinAsOff(){
 void PortMapIO::setPinAsOutput(){
 	this->m_port->ANALOG |= this->m_pin;
 	this->m_port->OE |= this->m_pin;//Выход
-	this->m_port->PD |= this->m_pin;//Открытый сток
+	this->m_port->PD &= ~(this->m_pin);//Режим драйвер
 	this->m_port->PULL |= this->m_pin;//Ставим подтяжку к нулю	
 	this->m_port->PULL &= ~(this->m_pin << 16);//Убираем подтяжку от "1"	
 	this->m_port->FUNC &= ~(3 << ((this->m_pin-1)*2));

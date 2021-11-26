@@ -5,8 +5,9 @@ TOUCHSCREEN::TOUCHSCREEN(
 							PortMapIO *Xm,
 							PortMapIO *Yp,		
 							PortMapIO *Ym,
-							PortMapIO *touchPortButton
-):Xp(Xp), Xm(Xm), Yp(Yp), Ym(Ym), touchButton(touchButton){
+							DELAY *pause,
+							ADC *adc
+):Xp(Xp), Xm(Xm), Yp(Yp), Ym(Ym), pause(pause), adc(adc){
 
 
 }
@@ -30,33 +31,47 @@ TOUCHSCREEN::TOUCHSCREEN(
 
 /**/
 void TOUCHSCREEN::init(){
-//	Xp = PortMapIO(touchPortXp, pinXp);
-//	Xm = PortMapIO(touchPortXm, pinXm);	
-//	Yp = PortMapIO(touchPortYp, pinYp);
-//	Ym = PortMapIO(touchPortYm, pinYm);
-//	  touchButton = PortMapIO(touchPortButton, pinTouchButton);
-	
+
 	Xp->setPinAsOff();
 	Xm->setPinAsOff();
 	Yp->setPinAsOff();
 	Ym->setPinAsOff();
-	touchButton->setPinAsOff();
+
 }
 /*
 Чтобы определить касание прикидываемся кнопкой 
+Xp - подключаем к минусу
+Xm - подключаем к минусу
+Ym - читаем как кнопкукнопку
+Yp - висит в воздухе и не мешает
 */
 void TOUCHSCREEN::switchAsButton(){
 	Xp->setPinAsOutput();
 	Xm->setPinAsOutput();
-	Xp->setHigh();	
-	touchButton->setPinAsInput();
+	Ym->setPinAsInput();
+	Yp->setPinAsOff();
+
+	Xp->setLow();
+	Xm->setLow();
+	
 }
 
+/**/
+void TOUCHSCREEN::switchAsDisplay(){
+	Xp->setPinAsOutput();
+	Xm->setPinAsOutput();
+	Ym->setPinAsOutput();
+	Yp->setPinAsOutput();
+
+	
+}
 /*
 Опрашиваем нашу кнопку
+возвращаем 1 если кнопка нажата
+0 если нет
 */
 uint8_t TOUCHSCREEN::readButon(){
-	return Yp->getStatus();
+	return !Ym->getStatus();
 }
 
 /*
@@ -104,20 +119,50 @@ void TOUCHSCREEN::switchToRead(PortMapIO *hot, PortMapIO *could, PortMapIO *read
 }
 
 /*
-читаем данные с АЦП
+Читаем показания по оси X или Y
 */
-//void TOUCHSCREEN::getPos(){
-//	uint16_t dataX = 0;
-//	uint16_t dataY = 0;
-//	
-//	switchToReadX();
-////	dataX = 
-//	
-//	
-//	switchToReadY();
-//	//	dataY = 
-//	
-//}
+uint16_t TOUCHSCREEN::readAxis(uint16_t chanelADC){
+	uint8_t cnt = 32;
+	uint32_t tmp = 0;
+	adc->setChannel(chanelADC_X);	
+	while(--cnt){
+		adc->Start();
+		while(ADC1_GetFlagStatus(ADCx_FLAG_END_OF_CONVERSION) != SET){}//ждем пока не закончится преобразование
+		tmp += adc->readData();	
+	}
+	return tmp/32;
+}
+
+
+
+/*
+Вернет положение нажатия XY или -1 если нажатия нет
+*/
+uint32_t TOUCHSCREEN::getPos(){
+	uint16_t dataX = 0;
+	uint16_t dataY = 0;
+	uint32_t retData = 0;
+
+	//Ждем пока зарядится емкость
+	pause->delay_ms(5);
+	//Если кнопка нажата, то читаем координату
+	if(!this->readButon()) return -1;
+	
+	switchToReadX();
+	pause->delay_ms(5);
+	dataX = readAxis(chanelADC_X);
+	
+	
+	switchToReadY();
+	pause->delay_ms(5);
+	dataY = readAxis(chanelADC_Y);
+	
+	retData = dataX;
+	retData <<= 16;
+	retData |= dataY;
+	
+	return retData;
+}
 
 
 

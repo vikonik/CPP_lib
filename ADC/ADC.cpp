@@ -3,7 +3,7 @@
 
 
 ADC::ADC(){}
-
+	ADC::ADC(PortMapIO *adcPin):adcPin(adcPin){}
 
 /*
 Инициализация основных настроек АЦП
@@ -75,8 +75,10 @@ void ADC::Start(){
 }
 
 /*
-
+Чтение данных от АЦП
 */
-
+uint16_t ADC::readData(){
+	return (uint16_t)(ADC1_GetResult() & 0x00000FFF);
+}
 
 

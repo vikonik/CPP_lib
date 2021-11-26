@@ -13,12 +13,13 @@
 #include <math.h>
 #include "port.h"
 #include "delay.h"
+#include "DefaultFonts.h"
 
 #define PORTRAIT 0
 #define LANDSCAPE 1
 
-#define ILI9488_TFTWIDTH  320
-#define ILI9488_TFTHEIGHT 480
+#define ILI9488_TFTWIDTH  480
+#define ILI9488_TFTHEIGHT 320
 
 #define ILI9488_NOP     0x00
 #define ILI9488_SWRESET 0x01
@@ -128,6 +129,7 @@
 #define VGA_PURPLE		0x8010
 #define VGA_TRANSPARENT	0xFFFFFFFF
 
+#define FON_COLOR 0xA7DF
 #define _swap_int16_t(a, b) \
 	{int16_t t = a; \
 	a = b;   \
@@ -146,7 +148,7 @@
 	#define fontbyte(x) cfont.font[x]  
 	struct _current_font
 {
-	uint8_t* font;
+	const uint8_t* font;
 	uint8_t x_size;
 	uint8_t y_size;
 	uint8_t offset;
@@ -162,8 +164,11 @@ class ILI9488 : public PortMapIO, public DELAY
 //		ILI9488(PortmapIO *CS, PortmapIO *DC, PortmapIO *RST,PortmapIO *SCK, PortmapIO *MOSI);
 		ILI9488(PortMapIO *bit_0, PortMapIO *bit_1,PortMapIO *bit_2,PortMapIO *bit_3,PortMapIO *bit_4,
 						PortMapIO *bit_5,PortMapIO *bit_6,PortMapIO *bit_7,PortMapIO *pTFT_RST,PortMapIO *pTFT_CS_X,
-						PortMapIO *pTFT_RS_Y,PortMapIO *pTFT_RD,PortMapIO *pTFT_WR);
+						PortMapIO *pTFT_RS_Y,PortMapIO *pTFT_RD,PortMapIO *pTFT_WR, MDR_PORT_TypeDef *dataPort);
+void testPin();
 		void begin(void);
+void setOrientation(uint8_t orientation);
+void readPixelFormat(void);
 		void hardReset(void);
     void clrXY();
 void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
@@ -173,6 +178,7 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void scroll(uint16_t pixels);
 		void setColor(uint16_t color);	
 		void setColor(uint8_t r,uint8_t g, uint8_t b );	
+    uint16_t getColor(void){return this->color565;}
     void setBackColor(uint8_t r, uint8_t g, uint8_t b);
     void setBackColor(uint32_t color);
 		void pushColor(uint16_t color);
@@ -188,26 +194,36 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,uint16_t color);
 		void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,uint16_t color);
 		void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+		void drawCircle(int x, int y, int radius);
+		void fillCircle(int x, int y, int radius);
 		void setRotation(uint8_t r);
 		void invertDisplay(uint8_t  i);
 		uint16_t setColor565(uint8_t r, uint8_t g, uint8_t b);
-		void     spiwrite(uint8_t data);
+		void spiwrite(uint8_t data);
 		void writecommand(uint8_t c);
 		void writeColor565(void);
 		void write16BitColor(uint16_t color);
 		void writedata(uint8_t d);
+uint8_t readData(void);//чтение дисплея(не написано)
 		void testLines(uint8_t color);
 		void sendasIO(uint8_t *d);
 
 
-void setFont(uint8_t* font);
-uint8_t* getFont();
+void setFont(const uint8_t* font);
+const uint8_t* getFont();
 uint8_t getFontXsize();
 uint8_t getFontYsize();
-
+void	print(char *st, int size, int x, int y, int deg=0);
+void	_print(char *st, int x, int y, int deg=0);
 
     void printChar(uint8_t c, int x, int y);
+void printChar_x2(uint8_t c, int x, int y);
 
+uint16_t getBackColor(){return backColor565;}
+
+		int16_t _width;
+		int16_t _height;
+		_current_font	cfont;
 	private:
 		uint8_t  tabcolor;
 		uint8_t mySPCR;
@@ -230,8 +246,7 @@ uint8_t getFontYsize();
 		//Adafruit fields
 		int16_t WIDTH;
 		int16_t HEIGHT;
-		int16_t _width;
-		int16_t  _height;
+
 		int16_t cursor_x;
 		int16_t cursor_y;
 		uint16_t textcolor;
@@ -240,11 +255,12 @@ uint8_t getFontYsize();
 		uint8_t textsize_y;
 		uint8_t rotation;
 		 
-		 _current_font	cfont;
+
 		 uint8_t colorH;
 		 uint8_t colorL;
 		 uint16_t color565;
 
+		 uint16_t backColor565;
 		 uint8_t backColorH;
 		 uint8_t backColorL;
      bool _transparent;

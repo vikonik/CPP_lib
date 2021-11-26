@@ -6,9 +6,10 @@
  */
 
 #include "ILI9488.h"
+
 #include "delay.h"
 #include "math.h"
-
+//#include "DefaultFonts.cpp"
 /*ILI9488::ILI9488(PortmapIO CS, PortmapIO DC, PortmapIO RST,PortmapSPI spi,PortmapUART uart)
 {
 	_cs=CS;
@@ -18,27 +19,30 @@
 	_uart=uart;
 
 }*/
+ILI9488 ::ILI9488(){};
+
 ILI9488::ILI9488(PortMapIO *bit_0, PortMapIO *bit_1,PortMapIO *bit_2,PortMapIO *bit_3,PortMapIO *bit_4,
 						PortMapIO *bit_5,PortMapIO *bit_6,PortMapIO *bit_7,
 						PortMapIO *pTFT_RST,PortMapIO *pTFT_CS_X,
-						PortMapIO *pTFT_RS_Y,PortMapIO *pTFT_RD,PortMapIO *pTFT_WR)
+						PortMapIO *pTFT_RS_Y,PortMapIO *pTFT_RD,PortMapIO *pTFT_WR, MDR_PORT_TypeDef *dataPort)
 						:	 bit_0(bit_0), bit_1(bit_1), bit_2(bit_2), bit_3(bit_3), bit_4(bit_4),
 						 bit_5(bit_5), bit_6(bit_6), bit_7(bit_7), pTFT_RST(pTFT_RST),pTFT_CS_X(pTFT_CS_X),
-						 pTFT_RS_Y(pTFT_RS_Y), pTFT_RD(pTFT_RD),pTFT_WR(pTFT_WR)			
+						 pTFT_RS_Y(pTFT_RS_Y), pTFT_RD(pTFT_RD),pTFT_WR(pTFT_WR), dataPort(dataPort)			
 						{
+							
 pTFT_RST->setPinAsOutput();
 pTFT_CS_X->setPinAsOutput();
 pTFT_RS_Y->setPinAsOutput();
 pTFT_RD->setPinAsOutput();
 pTFT_WR->setPinAsOutput();	
-							
+						
 pTFT_RST->setHigh();
 pTFT_CS_X->setHigh();
 pTFT_RS_Y->setHigh();
 pTFT_RD->setHigh();
 pTFT_WR->setHigh();
 							
-			hardReset();
+			
 							
 bit_0->setPinAsOutput();
 bit_1->setPinAsOutput();
@@ -49,7 +53,6 @@ bit_5->setPinAsOutput();
 bit_6->setPinAsOutput();
 bit_7->setPinAsOutput();							
 
-
 bit_0->setHigh();
 bit_1->setHigh();
 bit_2->setHigh();
@@ -58,7 +61,9 @@ bit_4->setHigh();
 bit_5->setHigh();
 bit_6->setHigh();
 bit_7->setHigh();
-						
+				
+hardReset();
+//		
 };
 		
 
@@ -66,8 +71,38 @@ bit_7->setHigh();
 template <class T> void swap (T& a, T& b)
 {
 T c(a); a=b; b=c;
-}					
+}	
 
+/**/				
+void ILI9488::testPin(void){
+SELECT_DISPLAY;
+	writecommand(0xFF);
+	writedata(0xFF);
+DESELECT_DISPLAY;
+/*
+bit_0->setHigh();
+bit_1->setHigh();
+bit_2->setHigh();
+bit_3->setHigh();
+bit_4->setHigh();
+bit_5->setHigh();
+bit_6->setHigh();
+bit_7->setHigh();
+*/
+//	this->delay_ms(1000);
+
+/*
+bit_0->setLow();
+bit_1->setLow();
+bit_2->setLow();
+bit_3->setLow();
+bit_4->setLow();
+bit_5->setLow();
+bit_6->setLow();
+bit_7->setLow();
+*/
+//	this->delay_ms(1000);
+}
 
 /**/
 void ILI9488::begin(void)
@@ -133,10 +168,18 @@ SELECT_DISPLAY;
 	writedata(0x80);
 DESELECT_DISPLAY;
 
-SELECT_DISPLAY;
-	writecommand(0x36);      //Memory Access
-	writedata(0x48);
-DESELECT_DISPLAY;
+//Устанавливаем ориентацию дисплея и направление отображения
+setOrientation(0x07 << 5);
+//SELECT_DISPLAY;
+//	writecommand(0x36);      //Memory Access
+////	writedata(0x08);//Портретный 0 с верху справа
+////writedata(0x88);//Портретный 0 с верху слева
+////writedata(0x48);//Портретный 0 с верху слева перевернутый на 180
+//writedata(0x40 | 0x00 | 0x08);
+////writedata(0x08);
+//DESELECT_DISPLAY;
+
+
 
 SELECT_DISPLAY;
 	writecommand(0x3A);      // Interface Pixel Format
@@ -189,16 +232,34 @@ DESELECT_DISPLAY;
 this->delay_ms(120);
 
 SELECT_DISPLAY;
-	writecommand(ILI9488_DISPON);    //Display on
-DESELECT_DISPLAY;
+	writecommand(ILI9488_DISPON);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
 
 }
 
+/**/
+void ILI9488::setOrientation(uint8_t orientation){
+SELECT_DISPLAY;
+	writecommand(0x36);      //Memory Access
+//	writedata(0x08);//Портретный 0 с верху справа
+//writedata(0x88);//Портретный 0 с верху слева
+//writedata(0x48);//Портретный 0 с верху слева перевернутый на 180
+writedata(orientation | 0x08);
+//writedata(0x08);
+DESELECT_DISPLAY;
+}
+/**/
+void ILI9488::readPixelFormat(void){
+SELECT_DISPLAY;
+	writecommand(ILI9488_DISPON);    //Display on ILI9488_DISPON
+
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
 /*
 Аппаратный сброс
 */
 void ILI9488::hardReset(void){
-	pTFT_RST->setHigh();//Устанавливаетсмя при тнициализации, потом всегда "1"
+	pTFT_RST->setHigh();//Устанавливается при инициализации, потом всегда "1"
 	this->delay_ms(10);
 	pTFT_RST->setLow();
 	this->delay_ms(10);	
@@ -300,8 +361,8 @@ void ILI9488::scroll(uint16_t pixels)
 */
 void ILI9488::setColor(uint16_t color){
 	this->color565 = color;
-	this->colorL = color565 & 0x31;
-	this->colorH = color565 / 8;	
+	this->colorL = color565 & 0xFF;
+	this->colorH = color565 / 256;	
 }	
 
 /*
@@ -310,29 +371,35 @@ void ILI9488::setColor(uint16_t color){
 */
 void ILI9488::setColor(uint8_t r,uint8_t g, uint8_t b ){
 	this->color565 = setColor565(r,g,b);
-	this->colorL = color565 & 0x31;
-	this->colorH = color565 / 8;
+	this->colorL = color565 & 0xFF;
+	this->colorH = color565 / 256;
 }	
 
 
 /**/
 void ILI9488::setBackColor(uint8_t r, uint8_t g, uint8_t b)
 {
-	backColorH=((r&248)|g>>5);
-	backColorL=((g&28)<<3|b>>3);
-	_transparent=false;
+	/*Исходный вариант*/
+//	backColorH=((r&248)|g>>5);
+//	backColorL=((g&28)<<3|b>>3);
+	/**/
+
+	backColor565 = setColor565(r,g,b);
+	setBackColor(backColor565);
 }
 
-
-/**/
+/*
+если надо не менять фон то фкгумент 0xFFFFFFFF
+*/
 void ILI9488::setBackColor(uint32_t color)
 {
+backColor565 = color;
 	if (color == VGA_TRANSPARENT)
 		_transparent = true;
 	else
 	{
-		backColorH = uint8_t(color>>8);
-		backColorL = uint8_t(color & 0xFF);
+	backColorL = color & 0xFF;
+	backColorH = color / 256;
 		_transparent=false;
 	}
 }
@@ -380,6 +447,7 @@ DESELECT_DISPLAY;
 */
 void ILI9488::fillScreen(uint16_t color)
 {
+//	fillRect(0, 0,  _width, _height, color);
 	fillRect(0, 0,  _width, _height, color);
 }
 /**/
@@ -524,6 +592,11 @@ setColor(color);
     }
   }
 }
+
+/*
+Рисуем прямоугольник цветом, 
+после отрисовки возвращаем предыдущий цвет обратно
+*/
 void ILI9488::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
 	
@@ -533,7 +606,7 @@ void ILI9488::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t colo
 		w = _width - x;
 	if ((y + h - 1) >= _height)
 		h = _height - y;
-	
+	uint16_t tmpColor = this->getColor();
 	setColor(color);
 	setAddrWindow(x, y, x + w - 1, y + h - 1);
 
@@ -546,22 +619,73 @@ SELECT_DISPLAY;
 		}
 	}
 DESELECT_DISPLAY;
-	
+	setColor(tmpColor);	
 
-//Не понятно зачем это надо
-//	_dc->setHigh();
-//		_cs->setLow();
-
-//		for (y = h; y > 0; y--) {
-//			for (x = w; x > 0; x--) {
-
-//				write16BitColor(ILI9488_DARKGREY);
-//			}
-//		}
-
-//		_cs->setHigh();
 
 }
+/**/
+void ILI9488::drawCircle(int x, int y, int radius)
+{
+//	int f = 1 - radius;
+//	int ddF_x = 1;
+//	int ddF_y = -2 * radius;
+//	int x1 = 0;
+//	int y1 = radius;
+// 
+//	cbi(P_CS, B_CS);
+//	setXY(x, y + radius, x, y + radius);
+//	LCD_Write_DATA(fch,fcl);
+//	setXY(x, y - radius, x, y - radius);
+//	LCD_Write_DATA(fch,fcl);
+//	setXY(x + radius, y, x + radius, y);
+//	LCD_Write_DATA(fch,fcl);
+//	setXY(x - radius, y, x - radius, y);
+//	LCD_Write_DATA(fch,fcl);
+// 
+//	while(x1 < y1)
+//	{
+//		if(f >= 0) 
+//		{
+//			y1--;
+//			ddF_y += 2;
+//			f += ddF_y;
+//		}
+//		x1++;
+//		ddF_x += 2;
+//		f += ddF_x;    
+//		setXY(x + x1, y + y1, x + x1, y + y1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x - x1, y + y1, x - x1, y + y1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x + x1, y - y1, x + x1, y - y1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x - x1, y - y1, x - x1, y - y1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x + y1, y + x1, x + y1, y + x1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x - y1, y + x1, x - y1, y + x1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x + y1, y - x1, x + y1, y - x1);
+//		LCD_Write_DATA(fch,fcl);
+//		setXY(x - y1, y - x1, x - y1, y - x1);
+//		LCD_Write_DATA(fch,fcl);
+//	}
+//	sbi(P_CS, B_CS);
+//	clrXY();
+}
+
+void ILI9488::fillCircle(int x, int y, int radius)
+{
+	for(int y1=-radius; y1<=0; y1++) 
+		for(int x1=-radius; x1<=0; x1++)
+			if(x1*x1+y1*y1 <= radius*radius) 
+			{
+				drawHLine(x+x1, y+y1, 2*(-x1));
+				drawHLine(x+x1, y-y1, 2*(-x1));
+				break;
+			}
+}
+/**/
 void ILI9488::setRotation(uint8_t r)
 {
 
@@ -591,6 +715,7 @@ void ILI9488::setRotation(uint8_t r)
 //	}
 
 }
+/**/
 void ILI9488::invertDisplay(uint8_t i)
 {
 
@@ -607,12 +732,14 @@ uint16_t ILI9488::setColor565(uint8_t r, uint8_t g, uint8_t b)
 }
 
 
+/**/
 void ILI9488::spiwrite(uint8_t data)
 {
 //	uint8_t d=data;
 //	_spi->send(&d);
 
 }
+/**/
 void ILI9488::writecommand(uint8_t c)
 {
 //	uint8_t d=c;
@@ -659,11 +786,11 @@ void ILI9488::writeColor565(void){
 
 //}
 
-
+/*
+Пишем байт данных
+*/
 void ILI9488::writedata(uint8_t d)
 {
-
-	
 	//	uint8_t tmp=d;
 SEND_DATA;
 	if(SINGLE_IO_MODE)
@@ -672,6 +799,7 @@ SEND_DATA;
 //	_spi->send(&tmp);
 
 }
+/**/
 void ILI9488::testLines(uint8_t color)
 {
 
@@ -731,25 +859,28 @@ void ILI9488::sendasIO(uint8_t *d)
 {
 	uint16_t portTemp = *d;
 	dataPort->CLRTX |= PORT_MASK;
-	dataPort->SETTX |= portTemp * 8; //Используем умножение для сдвига в лево на 3 разряда
+	dataPort->SETTX |= (portTemp * 8) | (0x0800); //Используем умножение для сдвига в лево на 3 разряда
 	pTFT_WR->setLow();
 	pTFT_WR->setHigh();	
 }
 
-
-void ILI9488::setFont(uint8_t* font)
+/*
+Устанавливаем используемый шрифт
+*/
+void ILI9488::setFont(const uint8_t* font)
 {
-	cfont.font      = font;
-	cfont.x_size    = fontbyte(0);
-	cfont.y_size    = fontbyte(1);
-	cfont.offset    = fontbyte(2);
-	cfont.numchars  = fontbyte(3);
+	cfont.font      = font;//Указатель на масстив со шрифтом
+	cfont.x_size    = fontbyte(0);//Ширина символа
+	cfont.y_size    = fontbyte(1);//Высота символа
+	cfont.offset    = fontbyte(2);//Смещение от начала таблицы ASCII
+	cfont.numchars  = fontbyte(3);//Количество символов в масстиве
 }
 
-uint8_t* ILI9488::getFont()
+const uint8_t* ILI9488::getFont()
 {
 	return cfont.font;
 }
+
 
 uint8_t ILI9488::getFontXsize()
 {
@@ -761,90 +892,260 @@ uint8_t ILI9488::getFontYsize()
 	return cfont.y_size;
 }
 
-/**/
-void ILI9488::printChar(uint8_t c, int x, int y)
-{
-	uint8_t i,ch;
-	uint16_t j;
-	uint16_t temp; 
-
-SELECT_DISPLAY;
-  
-	if (!_transparent)
-	{
-		if (orient==PORTRAIT)
-		{
-			setXY(x,y,x+cfont.x_size-1,y+cfont.y_size-1);
-	  
-			temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
-			for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)
+/*Упрощенная версия*/
+void ILI9488::printChar(uint8_t c, int x, int y){
+	uint16_t temp, i, j;
+//setXY
+	setAddrWindow(x,y,x+cfont.x_size-1,y+cfont.y_size-1);//Определяем окно для символа
+	temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;//4-это смещение от начала массива да длину служебных байт
+	
+	//cfont.x_size/8 Количество байт для одного столбика
+	//(cfont.x_size/8)*cfont.y_size
+	if (!_transparent){
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
 			{
 				ch=*(&cfont.font[temp]);
 				for(i=0;i<8;i++)
 				{   
 					if((ch&(1<<(7-i)))!=0)   
 					{
-						setPixel(color565);
+						this->setPixel(color565);
 					} 
 					else
 					{
-						setPixel(color565);
+						this->setPixel(backColor565);
 					}   
 				}
 				temp++;
-			}
-		}
-		else
-		{
-			temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
-
-			for(j=0;j<((cfont.x_size/8)*cfont.y_size);j+=(cfont.x_size/8))
-			{
-				setXY(x,y+(j/(cfont.x_size/8)),x+cfont.x_size-1,y+(j/(cfont.x_size/8)));
-				for (int zz=(cfont.x_size/8)-1; zz>=0; zz--)
-				{
-					ch=*(&cfont.font[temp+zz]);
-					for(i=0;i<8;i++)
-					{   
-						if((ch&(1<<i))!=0)   
-						{
-							setPixel(color565);
-						} 
-						else
-						{
-							setPixel(color565);
-						}   
-					}
-				}
-				temp+=(cfont.x_size/8);
-			}
-		}
+			}	
+    DESELECT_DISPLAY;
 	}
-	else
-	{
-		temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
-		for(j=0;j<cfont.y_size;j++) 
-		{
-			for (int zz=0; zz<(cfont.x_size/8); zz++)
+	else{
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
 			{
-				ch=*(&cfont.font[temp+zz]); 
+				ch=*(&cfont.font[temp]);
 				for(i=0;i<8;i++)
 				{   
-				
 					if((ch&(1<<(7-i)))!=0)   
 					{
-						setXY(x+i+(zz*8),y+j,x+i+(zz*8)+1,y+j+1);
-						setPixel(color565);
+						this->setPixel(color565);
 					} 
+  
 				}
-			}
-			temp+=(cfont.x_size/8);
-		}
+				temp++;
+			}	
+DESELECT_DISPLAY;
 	}
 
-DESELECT_DISPLAY;
-	clrXY();
+}
+/*Исходная версия*/
+//void ILI9488::printChar(uint8_t c, int x, int y)
+//{
+//	uint8_t i,ch;
+//	uint16_t j;
+//	uint16_t temp; 
 
+//SELECT_DISPLAY;
+//  
+//	if (!_transparent)
+//	{
+//		if (orient==PORTRAIT)
+//		{
+//			setXY(x,y,x+cfont.x_size-1,y+cfont.y_size-1);
+//	  
+//			temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
+//			for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)
+//			{
+//				ch=*(&cfont.font[temp]);
+//				for(i=0;i<8;i++)
+//				{   
+//					if((ch&(1<<(7-i)))!=0)   
+//					{
+//						setPixel(color565);
+//					} 
+//					else
+//					{
+//						setPixel(color565);
+//					}   
+//				}
+//				temp++;
+//			}
+//		}
+//		else
+//		{
+//			temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
+
+//			for(j=0;j<((cfont.x_size/8)*cfont.y_size);j+=(cfont.x_size/8))
+//			{
+//				setXY(x,y+(j/(cfont.x_size/8)),x+cfont.x_size-1,y+(j/(cfont.x_size/8)));
+//				for (int zz=(cfont.x_size/8)-1; zz>=0; zz--)
+//				{
+//					ch=*(&cfont.font[temp+zz]);
+//					for(i=0;i<8;i++)
+//					{   
+//						if((ch&(1<<i))!=0)   
+//						{
+//							setPixel(color565);
+//						} 
+//						else
+//						{
+//							setPixel(color565);
+//						}   
+//					}
+//				}
+//				temp+=(cfont.x_size/8);
+//			}
+//		}
+//	}
+//	else
+//	{
+//		temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;
+//		for(j=0;j<cfont.y_size;j++) 
+//		{
+//			for (int zz=0; zz<(cfont.x_size/8); zz++)
+//			{
+//				ch=*(&cfont.font[temp+zz]); 
+//				for(i=0;i<8;i++)
+//				{   
+//				
+//					if((ch&(1<<(7-i)))!=0)   
+//					{
+//						setXY(x+i+(zz*8),y+j,x+i+(zz*8)+1,y+j+1);
+//						setPixel(color565);
+//					} 
+//				}
+//			}
+//			temp+=(cfont.x_size/8);
+//		}
+//	}
+
+//DESELECT_DISPLAY;
+//	clrXY();
+
+
+//}
+
+/**/
+void ILI9488::print(char *st, int size, int x, int y, int deg)
+{
+	int stl, i;
+
+////	stl = strlen(st);
+	stl = size;//Количество символов в строке
+//	if (orient==PORTRAIT)
+//	{
+//	if (x==RIGHT)
+//		x=(disp_x_size+1)-(stl*cfont.x_size);
+//	if (x==CENTER)
+//		x=((disp_x_size+1)-(stl*cfont.x_size))/2;
+//	}
+//	else
+//	{
+//	if (x==RIGHT)
+//		x=(disp_y_size+1)-(stl*cfont.x_size);
+//	if (x==CENTER)
+//		x=((disp_y_size+1)-(stl*cfont.x_size))/2;
+//	}
+
+	for (i=0; i<stl; i++)
+//		if (deg==0)
+			printChar(*st++, x + (i*(cfont.x_size)), y);
+//		else
+//			rotateChar(*st++, x, y, i, deg);
+}
+
+/*-*/
+void ILI9488::_print(char *st, int x, int y, int deg)
+{
+int8_t i = 0;
+while(*st)
+//	for (i=0; i<stl; i++)
+//		if (deg==0)
+			printChar(*st++, x + (i++ *(cfont.x_size)), y);
+//		else
+//			rotateChar(*st++, x, y, i, deg);
+}
+
+
+void ILI9488::printChar_x2(uint8_t c, int x, int y){
+	uint16_t temp, i, j;
+uint16_t tmpX, tmpY;
+tmpX = cfont.x_size*2;
+tmpY = cfont.y_size*2;
+	setAddrWindow(x,y,x+tmpX-1,y+tmpY-1);//Определяем окно для символа
+	temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;//4-это смещение от начала массива да длину служебных байт
+	
+	//cfont.x_size/8 Количество байт для одного столбика
+	//(cfont.x_size/8)*cfont.y_size
+	if (!_transparent){
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
+			{
+				ch=*(&cfont.font[temp]);
+
+				for(i=0;i<8;i++)
+				{   
+					if((ch&(1<<(7-i)))!=0)   
+					{
+						this->setPixel(color565);
+            this->setPixel(color565);
+
+					} 
+					else
+					{
+						this->setPixel(backColor565);
+           this->setPixel(backColor565);
+
+					}  
+
+				}
+
+
+				for(i=0;i<8;i++)
+				{   
+					if((ch&(1<<(7-i)))!=0)   
+					{
+						this->setPixel(color565);
+            this->setPixel(color565);
+
+					} 
+					else
+					{
+						this->setPixel(backColor565);
+            this->setPixel(backColor565);
+
+					}   
+				}
+
+
+				temp++;
+			}	
+    DESELECT_DISPLAY;
+	}
+	else{
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
+			{
+				ch=*(&cfont.font[temp]);
+				for(i=0;i<8;i++)
+				{   
+					if((ch&(1<<(7-i)))!=0)   
+					{
+						this->setPixel(color565);
+					} 
+  
+				}
+				temp++;
+			}	
+DESELECT_DISPLAY;
+	}
 
 }
+
 

@@ -2,8 +2,8 @@
 #define _TOUCH_SCREEN_H_
 #include "MDR1986VE1T.h"                // Device header
 #include "port.h"
-
-
+#include "delay.h"
+#include "ADC.h"
 #ifdef __cplusplus
 extern "C"
 {
@@ -24,8 +24,9 @@ class TOUCHSCREEN : public PortMapIO{
 							PortMapIO *Xp,	
 							PortMapIO *Xm,
 							PortMapIO *Yp,		
-							PortMapIO *Ym,	
-							PortMapIO *touchButton	
+							PortMapIO *Ym,
+							DELAY *pause,
+							ADC *adc		
 	);
 	
 	void init();
@@ -35,20 +36,27 @@ class TOUCHSCREEN : public PortMapIO{
 	
 	
 	private:
-		
+	uint16_t chanelADC_X;
+	uint16_t chanelADC_Y;
 	uint16_t posX;
 	uint16_t posY;
 		
 	uint8_t readButon();	
 	void switchAsButton();	
+	void switchAsDisplay();
 	void switchToReadX();
 	void switchToReadY();
+	uint16_t readAxis(uint16_t chanelADC);
+	uint32_t getPos();
+	
 		
 		PortMapIO *Xp;	
 		PortMapIO *Xm;
 		PortMapIO *Yp;		
 		PortMapIO *Ym;	
-		PortMapIO *touchButton;	
+		MDR_PORT_TypeDef *touchButton;	
+	DELAY *pause;
+	ADC *adc;
 	
 //		MDR_PORT_TypeDef *touchPortYp;		
 //		MDR_PORT_TypeDef *touchPortYm;

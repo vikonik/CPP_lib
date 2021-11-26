@@ -2,7 +2,7 @@
 #define _DELAY_H_
 #include "MDR1986VE1T.h"                // Device header
 #include "MDR32F9Qx_timer.h"            // Keil::Drivers:TIMER
-
+#include "MDR32F9Qx_it.h"
 
 
 
@@ -20,7 +20,7 @@
 
 class DELAY{
 	public:
-		DELAY();
+	DELAY();
 	void delayInit(void);
 	void delay_ms(uint32_t _tickDelay);
 	
