@@ -1,5 +1,5 @@
 #include "touchScreen.h"
-
+#include "portMapin.h"
 TOUCHSCREEN::TOUCHSCREEN( 
 							PortMapIO *Xp,	
 							PortMapIO *Xm,
@@ -84,6 +84,7 @@ void TOUCHSCREEN::switchToReadX(){
 	Ym->setPinAsOff();
 	Xp->setHigh();
 	Xm->setLow();
+
 }
 
 /*
@@ -124,9 +125,10 @@ void TOUCHSCREEN::switchToRead(PortMapIO *hot, PortMapIO *could, PortMapIO *read
 uint16_t TOUCHSCREEN::readAxis(uint16_t chanelADC){
 	uint8_t cnt = 32;
 	uint32_t tmp = 0;
-	adc->setChannel(chanelADC_X);	
-	while(--cnt){
-		adc->Start();
+	adc->setChannel(chanelADC);	
+		pause->delay_ms(10);
+	while(cnt--){
+//		adc->Start();
 		while(ADC1_GetFlagStatus(ADCx_FLAG_END_OF_CONVERSION) != SET){}//ждем пока не закончится преобразование
 		tmp += adc->readData();	
 	}
@@ -139,28 +141,32 @@ uint16_t TOUCHSCREEN::readAxis(uint16_t chanelADC){
 Вернет положение нажатия XY или -1 если нажатия нет
 */
 uint32_t TOUCHSCREEN::getPos(){
-	uint16_t dataX = 0;
-	uint16_t dataY = 0;
+	
+	float dataX = 0.0;
+	float dataY = 0.0;
 	uint32_t retData = 0;
 
 	//Ждем пока зарядится емкость
 	pause->delay_ms(5);
 	//Если кнопка нажата, то читаем координату
-	if(!this->readButon()) return -1;
+//	if(!this->readButon()) return -1;
 	
+	//из-за расположения экрана меняем местами x и Y
 	switchToReadX();
 	pause->delay_ms(5);
-	dataX = readAxis(chanelADC_X);
+	dataY = (4096-readAxis(6)-475)/10;
 	
 	
 	switchToReadY();
 	pause->delay_ms(5);
-	dataY = readAxis(chanelADC_Y);
+	dataX =(readAxis(2)-270)/7.3;
 	
-	retData = dataX;
+	retData = (uint16_t)dataX;
 	retData <<= 16;
-	retData |= dataY;
+	retData |= (uint16_t)dataY;
 	
+//	switchAsDisplay();
+//pause->delay_ms(5);
 	return retData;
 }
 

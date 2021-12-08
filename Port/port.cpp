@@ -17,16 +17,17 @@ PortMapIO::PortMapIO (MDR_PORT_TypeDef *port, uint16_t pin):m_port(port), m_pin(
 
 PortMapIO::PortMapIO (MDR_PORT_TypeDef *port, 
 											uint16_t PORT_Pin, 
-											PORT_OE_TypeDef PORT_OE = PORT_OE_OUT, 
-											PORT_PULL_UP_TypeDef PORT_PULL_UP = PORT_PULL_UP_OFF, 
-											PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN = PORT_PULL_DOWN_OFF, 
-											PORT_PD_SHM_TypeDef PORT_PD_SHM = PORT_PD_SHM_OFF, 
-											PORT_PD_TypeDef PORT_PD = PORT_PD_DRIVER, 
-											PORT_GFEN_TypeDef PORT_GFEN = PORT_GFEN_OFF, 
-											PORT_FUNC_TypeDef PORT_FUNC = PORT_FUNC_PORT, 
-											PORT_SPEED_TypeDef PORT_SPEED = PORT_SPEED_MAXFAST, 
-											PORT_MODE_TypeDef PORT_MODE = PORT_MODE_DIGITAL)
+											PORT_OE_TypeDef PORT_OE, 
+											PORT_PULL_UP_TypeDef PORT_PULL_UP , 
+											PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN , 
+											PORT_PD_SHM_TypeDef PORT_PD_SHM , 
+											PORT_PD_TypeDef PORT_PD, 
+											PORT_GFEN_TypeDef PORT_GFEN, 
+											PORT_FUNC_TypeDef PORT_FUNC , 
+											PORT_SPEED_TypeDef PORT_SPEED , 
+											PORT_MODE_TypeDef PORT_MODE )
 {
+RST_CLK_PCLKcmd(RST_CLK_PCLK_PORTD, ENABLE);	
 											
 this->fullInitPin(port, PORT_Pin, PORT_OE, 
 							 PORT_PULL_UP, PORT_PULL_DOWN, PORT_PD_SHM, 
@@ -142,7 +143,7 @@ void PortMapIO::fullInitPin(MDR_PORT_TypeDef *port,
 	PortStructInit.PORT_GFEN = PORT_GFEN;					
 	PortStructInit.PORT_FUNC = PORT_FUNC;
 	PortStructInit.PORT_SPEED = PORT_SPEED;							
-	PortStructInit.PORT_MODE = PORT_MODE_DIGITAL;
+	PortStructInit.PORT_MODE = PORT_MODE;
 
 	PORT_Init(port, &PortStructInit);
 }
@@ -165,7 +166,7 @@ void PortMapIO::setPinAsInput(){
 void PortMapIO::setPinAsOff(){
 	this->m_port->ANALOG &= ~this->m_pin;
 	this->m_port->OE &= ~this->m_pin;//Вход
-	this->m_port->PD |= this->m_pin;//Открытый сток
+	this->m_port->PD &= ~this->m_pin;//Открытый сток
 	this->m_port->PULL &= ~this->m_pin;//Убираем подтяжку от нуля	
 	this->m_port->PULL &= ~(this->m_pin << 16);//Убираем подтяжку от "1"	
 	this->m_port->FUNC &= ~(3 << ((this->m_pin-1)*2));
@@ -188,8 +189,20 @@ void PortMapIO::setPinAsOutput(){
 */
 void PortMapIO::setPinAsAnalog(){
 	this->m_port->OE &= ~this->m_pin;//Вход
+	this->m_port->PULL &= ~(this->m_pin);//Убираем подтяжку от "0"
+	this->m_port->PULL &= ~(this->m_pin << 16);//Убираем подтяжку от "1"	
+	this->m_port->FUNC &= ~(3 << ((this->m_pin-1)*2));
+	
 	this->m_port->ANALOG &= ~this->m_pin;
+	this->m_port->GFEN &= ~this->m_pin;
+	
+
 }
+
+/*
+Переключение фугнкции пина
+*/
+//void PortMapIO::setPinFunction(){}
 
 
 //	initPin(MDR_PORTA, MCU_SSR_INT | MCU_SSR_EXT0 | MCU_SSR_EXT1 | MCU_SWLP_OUT_0|MCU_SWLP_OUT_1|MCU_SWHP_OUT_0|MCU_SWHP_OUT_1, PORT_OE_OUT, 

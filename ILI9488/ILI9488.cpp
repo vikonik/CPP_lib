@@ -517,18 +517,18 @@ DESELECT_DISPLAY;
 void ILI9488::drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color)
 {
 
-//	if ((x >= _width) || (y >= _height))
-//		return;
-//	if ((x + w - 1) >= _width)
-//		w = _width - x;
-//	setAddrWindow(x, y, x + w - 1, y);
-//	_dc->setHigh();
-//	_cs->setLow();
-//	while (w--)
-//	{
-//		write16BitColor(color);
-//	}
-//	_cs->setHigh();
+	if ((x >= _width) || (y >= _height))
+		return;
+	if ((x + w - 1) >= _width)
+		w = _width - x;
+	setAddrWindow(x, y, x + w - 1, y);
+SEND_DATA;
+SELECT_DISPLAY;
+	while (w--)
+	{
+		writeColor565();
+	}
+DESELECT_DISPLAY;
 }
 
 /**/
@@ -680,11 +680,14 @@ void ILI9488::fillCircle(int x, int y, int radius)
 		for(int x1=-radius; x1<=0; x1++)
 			if(x1*x1+y1*y1 <= radius*radius) 
 			{
-				drawHLine(x+x1, y+y1, 2*(-x1));
-				drawHLine(x+x1, y-y1, 2*(-x1));
+				drawFastHLine(x+x1, y+y1, 2*(-x1), VGA_RED);
+				drawFastHLine(x+x1, y-y1, 2*(-x1), VGA_RED);
 				break;
 			}
 }
+
+
+
 /**/
 void ILI9488::setRotation(uint8_t r)
 {
@@ -1069,8 +1072,9 @@ while(*st)
 //		else
 //			rotateChar(*st++, x, y, i, deg);
 }
+/**/
 
-
+/**/
 void ILI9488::printChar_x2(uint8_t c, int x, int y){
 	uint16_t temp, i, j;
 uint16_t tmpX, tmpY;
@@ -1084,64 +1088,54 @@ tmpY = cfont.y_size*2;
 	if (!_transparent){
     SEND_DATA;
     SELECT_DISPLAY;
-	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
-			{
-				ch=*(&cfont.font[temp]);
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size)/2;j++)//j-текущий столбик
+	{
+    for(int l = 0; l < 2; l++)
+      for(int k = 0; k < 2; k++){
+              ch=*(&cfont.font[temp+k]);
 
-				for(i=0;i<8;i++)
-				{   
-					if((ch&(1<<(7-i)))!=0)   
-					{
-						this->setPixel(color565);
-            this->setPixel(color565);
-
-					} 
-					else
-					{
-						this->setPixel(backColor565);
-           this->setPixel(backColor565);
-
-					}  
-
-				}
-
-
-				for(i=0;i<8;i++)
-				{   
-					if((ch&(1<<(7-i)))!=0)   
-					{
-						this->setPixel(color565);
-            this->setPixel(color565);
-
-					} 
-					else
-					{
-						this->setPixel(backColor565);
-            this->setPixel(backColor565);
-
-					}   
-				}
-
-
-				temp++;
-			}	
+              for(i=0;i<8;i++)
+              {   
+                if((ch&(1<<(7-i)))!=0)   
+                {
+                  this->setPixel(color565);
+                  this->setPixel(color565);
+                } 
+                else
+                {
+                  this->setPixel(backColor565);
+                 this->setPixel(backColor565);
+                }  
+              }
+        }
+		temp +=2;
+	 }	
     DESELECT_DISPLAY;
 	}
 	else{
     SEND_DATA;
     SELECT_DISPLAY;
-	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size)/2;j++)//j-текущий столбик
 			{
-				ch=*(&cfont.font[temp]);
-				for(i=0;i<8;i++)
-				{   
-					if((ch&(1<<(7-i)))!=0)   
-					{
-						this->setPixel(color565);
-					} 
-  
-				}
-				temp++;
+        for(int l = 0; l < 2; l++)
+          for(int k = 0; k < 2; k++){
+                  ch=*(&cfont.font[temp+k]);
+
+                  for(i=0;i<8;i++)
+                  {   
+                    if((ch&(1<<(7-i)))!=0)   
+                    {
+                      this->setPixel(color565);
+                      this->setPixel(color565);
+                    } 
+                    else
+                    {
+                      this->setPixel(backColor565);
+                     this->setPixel(backColor565);
+                    }  
+                  }
+          }
+				temp +=2;
 			}	
 DESELECT_DISPLAY;
 	}

@@ -33,21 +33,24 @@ class TOUCHSCREEN : public PortMapIO{
 	void switchToRead(PortMapIO *hot, PortMapIO *could, PortMapIO *read, PortMapIO *free);
 	uint16_t grtPosX(){return posX;}
 	uint16_t grtPosY(){return posY;}
-	
+	uint8_t readButon();	
+	void switchAsButton();		
+	void switchAsDisplay();
+	void switchToReadX();
+	void switchToReadY();
+	uint16_t readAxis(uint16_t chanelADC);
+	uint32_t getPos();	
 	
 	private:
+	const float kX = 7.3;// коэфициент для рассчета координат 
+	const float kY = 7.3;// коэфициент для рассчета координат 
 	uint16_t chanelADC_X;
 	uint16_t chanelADC_Y;
 	uint16_t posX;
 	uint16_t posY;
 		
-	uint8_t readButon();	
-	void switchAsButton();	
-	void switchAsDisplay();
-	void switchToReadX();
-	void switchToReadY();
-	uint16_t readAxis(uint16_t chanelADC);
-	uint32_t getPos();
+
+
 	
 		
 		PortMapIO *Xp;	

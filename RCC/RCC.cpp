@@ -42,9 +42,9 @@ MDR_RST_CLK->PER_CLOCK &=~0x08;
 			/* Select HSE clock as CPU_PLL input clock source */
 			/* Set PLL multiplier to 1 */
 uint32_t tmp = fclk_MHz * 1000000 / HSE_Value; 
-if(tmp > 15) tmp = 15;
+if(tmp > 16) tmp = 16;
 
-			RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, tmp);
+			RST_CLK_CPU_PLLconfig(RST_CLK_CPU_PLLsrcHSEdiv1, tmp-1);
 			/* Enable CPU_PLL */
 			RST_CLK_CPU_PLLcmd(ENABLE);
 			/* Switch LED2 on and wait for PLL ready status */
