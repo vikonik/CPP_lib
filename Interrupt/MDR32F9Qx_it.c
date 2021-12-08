@@ -31,14 +31,14 @@
 
 
 #include "stdio.h"
-#include "delay.h"
+//#include "delay.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-/* Extern variables ---------------------------------------------------------*/
-extern uint32_t tickDelay;
+/* Extern variables ----------------------------------------------------------*/
+//extern uint32_t tickDelay;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -150,7 +150,7 @@ void PendSV_Handler(void)
 *******************************************************************************/
 void SysTick_Handler(void)
 {
-	if(tickDelay > 0)	tickDelay--;
+//	if(tickDelay > 0)	tickDelay--;
 	
 }
 /*******************************************************************************
@@ -254,10 +254,10 @@ void WWDG_IRQHandler(void)
 *******************************************************************************/
 void TIMER1_IRQHandler(void)//Timer1_IRQHandler
 {
-	if(TIMER_GetITStatus(MDR_TIMER1,TIMER_STATUS_CNT_ZERO) == 1){
-		ADC1_Start();
-		TIMER_ClearITPendingBit(MDR_TIMER1, TIMER_STATUS_CNT_ZERO);
-	}
+//	if(TIMER_GetITStatus(MDR_TIMER1,TIMER_STATUS_CNT_ZERO) == 1){
+//		ADC1_Start();
+//		TIMER_ClearITPendingBit(MDR_TIMER1, TIMER_STATUS_CNT_ZERO);
+//	}
 			
 }
 /*******************************************************************************
