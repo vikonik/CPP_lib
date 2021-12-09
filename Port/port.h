@@ -50,7 +50,9 @@ class PortMapIO{
 	void setPinAsAnalog();
 	uint16_t PortMapIoPORT_Read(uint16_t *data);
 	void PortMapIoPORT_Write(uint16_t *data);
-		
+	uint16_t getPin(){return m_pin;}
+
+	
 	private:
 		MDR_PORT_TypeDef * m_port;
 		uint16_t m_pin;
