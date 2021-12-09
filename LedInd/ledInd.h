@@ -101,17 +101,21 @@
 //	DIG_9
 //};
 
-class LED_IND{
+
+/**********************************************************************/
+class LED_CODE{
 	public:
-		LED_IND();
-    LED_IND( PortMapIO *pinCatode, 
-          PortMapIO *seg_A, PortMapIO *seg_B,
+		LED_CODE();
+	
+    LED_CODE(PortMapIO *seg_A, PortMapIO *seg_B,
           PortMapIO *seg_C, PortMapIO *seg_D, PortMapIO *seg_E,
-          PortMapIO *seg_F, PortMapIO *seg_G, PortMapIO *seg_H);
+          PortMapIO *seg_F, PortMapIO *seg_G, PortMapIO *seg_H,
+          PortMapIO *seg_I, PortMapIO *seg_J);
 	
 	void initDigit();
+	void setCode(uint8_t digit);
 	private:
-
+		
 PortMapIO *seg_A; 
 PortMapIO *seg_B;
 PortMapIO *seg_C;
@@ -120,13 +124,42 @@ PortMapIO *seg_E;
 PortMapIO *seg_F;
 PortMapIO *seg_G;
 PortMapIO *seg_H;
-
-
-PortMapIO *pinCatode;
+PortMapIO *seg_I;
+PortMapIO *seg_J;
 
 //	uint8_t *digit = &myDigit;
 	
 };
 
+/*********************************************************************************/
+class LED_CATODE{
+	public:
+		LED_CATODE();
+		LED_CATODE(PortMapIO *pinCatode);	
+	
+		void addCatode(PortMapIO *pinCatode){this->pinCatode = pinCatode;}
+		void catodeOff(){pinCatode->setHigh();}
+		void catodeOn(){pinCatode->setLow();}
+    void setHi(){pinCatode->setHigh();}
+    void setLow(){pinCatode->setLow();}
+	private:
+		PortMapIO *pinCatode;
+	
+	
+};
 
+/****************************************************************************/
+class LED_DIGIT{
+	public:
+		LED_DIGIT(LED_CODE *ledCode, LED_CATODE *catode);
+		LED_DIGIT(LED_CODE *ledCode, LED_CATODE *catode, uint8_t numDigit);
+		LED_CODE *ledCode;
+		LED_CATODE *catode;
+	
+	void showDigit(uint8_t _numDigit, uint16_t _digit);
+
+	private:
+		uint8_t numDigit;
+
+};
 #endif
