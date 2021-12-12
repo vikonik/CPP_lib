@@ -1,8 +1,9 @@
 #ifndef _PORT_H
 #define _PORT_H
-#include "MDR1986VE1T.h"                // Device header
-#include "MDR32F9Qx_port.h"             // Keil::Drivers:PORT
-
+//#ifdef USE_MDR1986VE9x
+//#include "MDR1986VE1T.h"                // Device header
+//#include "MDR32F9Qx_port.h"             // Keil::Drivers:PORT
+#include "MDR32F9Qx_config.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -31,8 +32,7 @@ class PortMapIO{
 		void setLow();
 		void setHigh();
 		uint8_t getStatus();	
-		void fullInitPin(MDR_PORT_TypeDef *port, 
-							uint16_t PORT_Pin, 
+		void fullInitPin( 
 							PORT_OE_TypeDef PORT_OE, 
 							PORT_PULL_UP_TypeDef PORT_PULL_UP, 
 							PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN, 
@@ -54,6 +54,7 @@ class PortMapIO{
 
 	
 	private:
+void enablePort();
 		MDR_PORT_TypeDef * m_port;
 		uint16_t m_pin;
 		uint8_t m_status;

@@ -1,19 +1,29 @@
 #include "uart.h"
+#include "MDR32F9Qx_rst_clk.h"          // Keil::Drivers:RST_CLK
 
-UART::UART(MDR_UART_TypeDef* UARTx, uint32_t UART_BaudRate, uint16_t UART_WordLength, uint16_t UART_StopBits,uint16_t UART_Parity, uint16_t UART_FIFOMode, uint16_t UART_HardwareFlowControl )
+/*
+Перед созданием экземпляра класса нужно настроить порты и
+RST_CLK_PCLKcmd(RST_CLK_PCLK_UART1, ENABLE);
+
+*/
+UART::UART(MDR_UART_TypeDef* UARTx, uint32_t _UART_BaudRate, uint16_t _UART_WordLength, uint16_t _UART_StopBits,uint16_t _UART_Parity, uint16_t _UART_FIFOMode, uint16_t _UART_HardwareFlowControl )
 :currentUART(UARTx)
 {
+
   UART_InitTypeDef uart;
   UART_DeInit(UARTx);
   UART_StructInit(&uart);
-  UART_BRGInit(UARTx,UART_HCLKdiv128);
-  uart.UART_BaudRate = UART_BaudRate;
-  uart.UART_WordLength = UART_WordLength;
-  uart.UART_StopBits = UART_StopBits;
-  uart.UART_Parity = UART_Parity;
-  uart.UART_FIFOMode = UART_FIFOMode;
-  uart.UART_HardwareFlowControl = UART_HardwareFlowControl;
+  RST_CLK_PCLKcmd(RST_CLK_PCLK_UART2, ENABLE);
+  uart.UART_BaudRate = _UART_BaudRate;
+  uart.UART_WordLength = _UART_WordLength;
+  uart.UART_StopBits = _UART_StopBits;
+  uart.UART_Parity = _UART_Parity;
+  uart.UART_FIFOMode = _UART_FIFOMode;
+  uart.UART_HardwareFlowControl = _UART_HardwareFlowControl;
+
   UART_Init(UARTx, &uart);
+  UART_BRGInit(UARTx,UART_HCLKdiv1);
+  UART_ITConfig (UARTx, UART_IT_RX, ENABLE);
   UART_Cmd(UARTx, ENABLE);
 }
 
@@ -67,11 +77,11 @@ void UART::enableIRQ(){
 /**/
 void UART::sendByte(uint8_t byte){
 	/* Check TXFE flag*/
-   while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY)){};//UART_FLAG_TXFE!= SET UART_FLAG_BUSY
+   while (UART_GetFlagStatus (MDR_UART2,UART_FLAG_BUSY)){};//UART_FLAG_TXFE!= SET UART_FLAG_BUSY
 
    /* Send Data from UART1 */
-   UART_SendData (currentUART,byte);//MDR_UART2
-	while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY)){};
+   UART_SendData (MDR_UART2,byte);//MDR_UART2
+	while (UART_GetFlagStatus (MDR_UART2,UART_FLAG_BUSY)){};
 }
 
 /**/

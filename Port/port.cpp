@@ -15,33 +15,31 @@ PortMapIO::PortMapIO (MDR_PORT_TypeDef *port, uint16_t pin):m_port(port), m_pin(
 
 
 
-PortMapIO::PortMapIO (MDR_PORT_TypeDef *port, 
-											uint16_t PORT_Pin, 
-											PORT_OE_TypeDef PORT_OE, 
-											PORT_PULL_UP_TypeDef PORT_PULL_UP , 
-											PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN , 
-											PORT_PD_SHM_TypeDef PORT_PD_SHM , 
-											PORT_PD_TypeDef PORT_PD, 
-											PORT_GFEN_TypeDef PORT_GFEN, 
-											PORT_FUNC_TypeDef PORT_FUNC , 
-											PORT_SPEED_TypeDef PORT_SPEED , 
-											PORT_MODE_TypeDef PORT_MODE )
+PortMapIO::PortMapIO (MDR_PORT_TypeDef *_port, 
+											uint16_t _pin, 
+											PORT_OE_TypeDef _PORT_OE, 
+											PORT_PULL_UP_TypeDef _PORT_PULL_UP , 
+											PORT_PULL_DOWN_TypeDef _PORT_PULL_DOWN , 
+											PORT_PD_SHM_TypeDef _PORT_PD_SHM , 
+											PORT_PD_TypeDef _PORT_PD, 
+											PORT_GFEN_TypeDef _PORT_GFEN, 
+											PORT_FUNC_TypeDef _PORT_FUNC , 
+											PORT_SPEED_TypeDef _PORT_SPEED , 
+											PORT_MODE_TypeDef _PORT_MODE )
+:m_port(_port), m_pin(_pin)
 {
-RST_CLK_PCLKcmd(RST_CLK_PCLK_PORTD, ENABLE);	
+enablePort();
 											
-this->fullInitPin(port, PORT_Pin, PORT_OE, 
-							 PORT_PULL_UP, PORT_PULL_DOWN, PORT_PD_SHM, 
-							 PORT_PD, PORT_GFEN, PORT_FUNC, PORT_SPEED, PORT_MODE);
+this->fullInitPin(_PORT_OE, 
+							 _PORT_PULL_UP, _PORT_PULL_DOWN, _PORT_PD_SHM, 
+							 _PORT_PD, _PORT_GFEN, _PORT_FUNC, _PORT_SPEED, _PORT_MODE);
 
 
 }
-
-
-void PortMapIO::init(){
-	m_status=0;
-	
+/**/
+void PortMapIO::enablePort(){
 				//Инициализация пина
-		PORT_InitTypeDef port;
+		
 		if (m_port == MDR_PORTA)
 			RST_CLK_PCLKcmd(RST_CLK_PCLK_PORTA, ENABLE);	
 
@@ -59,21 +57,24 @@ void PortMapIO::init(){
 
 		if (m_port ==  MDR_PORTF)
 			RST_CLK_PCLKcmd(RST_CLK_PCLK_PORTF, ENABLE);	
+}
 
-
-		PORT_StructInit(&port);
-
-		port.PORT_FUNC = PORT_FUNC_PORT;
-		port.PORT_GFEN = PORT_GFEN_OFF;
-		port.PORT_MODE = PORT_MODE_DIGITAL;
-		port.PORT_OE = PORT_OE_OUT;
-		port.PORT_PD = PORT_PD_DRIVER;
-		port.PORT_PD_SHM = PORT_PD_SHM_OFF;
-		port.PORT_Pin = this->m_pin;
-		port.PORT_PULL_DOWN = PORT_PULL_DOWN_ON;
-		port.PORT_PULL_UP = PORT_PULL_UP_OFF;
-		port.PORT_SPEED = PORT_SPEED_MAXFAST;
-		PORT_Init(this->m_port,&port);
+void PortMapIO::init(){
+	m_status=0;
+	enablePort();
+PORT_InitTypeDef prt;
+		PORT_StructInit(&prt);
+		prt.PORT_FUNC = PORT_FUNC_PORT;
+		prt.PORT_GFEN = PORT_GFEN_OFF;
+		prt.PORT_MODE = PORT_MODE_DIGITAL;
+		prt.PORT_OE = PORT_OE_OUT;
+		prt.PORT_PD = PORT_PD_DRIVER;
+		prt.PORT_PD_SHM = PORT_PD_SHM_OFF;
+		prt.PORT_Pin = this->m_pin;
+		prt.PORT_PULL_DOWN = PORT_PULL_DOWN_ON;
+		prt.PORT_PULL_UP = PORT_PULL_UP_OFF;
+		prt.PORT_SPEED = PORT_SPEED_MAXFAST;
+		PORT_Init(this->m_port,&prt);
 
 
 }
@@ -118,34 +119,32 @@ uint16_t PortMapIO::PortMapIoPORT_Read(uint16_t *data){
 /*
 Инициализация вывода с полной нвтсройкой
 */
-void PortMapIO::fullInitPin(MDR_PORT_TypeDef *port, 
-							uint16_t PORT_Pin, 
-							PORT_OE_TypeDef PORT_OE, 
-							PORT_PULL_UP_TypeDef PORT_PULL_UP, 
-							PORT_PULL_DOWN_TypeDef PORT_PULL_DOWN, 
-							PORT_PD_SHM_TypeDef PORT_PD_SHM, 
-							PORT_PD_TypeDef PORT_PD, 
-							PORT_GFEN_TypeDef PORT_GFEN, 
-							PORT_FUNC_TypeDef PORT_FUNC, 
-							PORT_SPEED_TypeDef PORT_SPEED, 
-							PORT_MODE_TypeDef PORT_MODE)
+void PortMapIO::fullInitPin( 
+							PORT_OE_TypeDef _PORT_OE, 
+							PORT_PULL_UP_TypeDef _PORT_PULL_UP, 
+							PORT_PULL_DOWN_TypeDef _PORT_PULL_DOWN, 
+							PORT_PD_SHM_TypeDef _PORT_PD_SHM, 
+							PORT_PD_TypeDef _PORT_PD, 
+							PORT_GFEN_TypeDef _PORT_GFEN, 
+							PORT_FUNC_TypeDef _PORT_FUNC, 
+							PORT_SPEED_TypeDef _PORT_SPEED, 
+							PORT_MODE_TypeDef _PORT_MODE)
 {
 								
-	PORT_InitTypeDef PortStructInit;
+  PORT_InitTypeDef PortStructInit;
 	PORT_StructInit(&PortStructInit);
-								
-	PortStructInit.PORT_Pin	= PORT_Pin;						
-	PortStructInit.PORT_OE = PORT_OE;
-	PortStructInit.PORT_PULL_UP	= PORT_PULL_UP;						
-	PortStructInit.PORT_PULL_DOWN = PORT_PULL_DOWN;		
-	PortStructInit.PORT_PD_SHM =	PORT_PD_SHM;	
-	PortStructInit.PORT_PD =	PORT_PD;
-	PortStructInit.PORT_GFEN = PORT_GFEN;					
-	PortStructInit.PORT_FUNC = PORT_FUNC;
-	PortStructInit.PORT_SPEED = PORT_SPEED;							
-	PortStructInit.PORT_MODE = PORT_MODE;
+	PortStructInit.PORT_Pin = this->m_pin;						
+	PortStructInit.PORT_OE = _PORT_OE;
+	PortStructInit.PORT_PULL_UP	= _PORT_PULL_UP;						
+	PortStructInit.PORT_PULL_DOWN = _PORT_PULL_DOWN;		
+	PortStructInit.PORT_PD_SHM =	_PORT_PD_SHM;	
+	PortStructInit.PORT_PD =	_PORT_PD;
+	PortStructInit.PORT_GFEN = _PORT_GFEN;					
+	PortStructInit.PORT_FUNC = _PORT_FUNC;
+	PortStructInit.PORT_SPEED = _PORT_SPEED;							
+	PortStructInit.PORT_MODE = _PORT_MODE;
+PORT_Init(this->m_port,&PortStructInit);
 
-	PORT_Init(port, &PortStructInit);
 }
 
 /*

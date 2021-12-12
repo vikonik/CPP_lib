@@ -1,6 +1,6 @@
 #ifndef _RCC_H
 #define _RCC_H
-#include "MDR1986VE1T.h"                // Device header
+#include "MDR32F9Qx_config.h"
 
 class RCC{
 public:
