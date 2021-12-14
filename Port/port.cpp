@@ -111,7 +111,7 @@ void PortMapIO::PortMapIoPORT_Write(uint16_t *data){
 	PORT_Write(this->m_port,*data);
 }
 
-uint16_t PortMapIO::PortMapIoPORT_Read(uint16_t *data){
+uint16_t PortMapIO::PortMapIoPORT_Read(){
 	return PORT_ReadInputData(this->m_port);
 }
 
@@ -197,7 +197,27 @@ void PortMapIO::setPinAsAnalog(){
 	
 
 }
+/*
+Переключаемся на альтернативную функутю
+digital 1 цифровой, 0 аналоговый
+OE - 1 выход, 0 вход
 
+*/
+void PortMapIO::setPinAsAlternative(uint8_t digital, uint8_t OE){
+if(digital)
+	this->m_port->ANALOG |= this->m_pin;
+else
+	this->m_port->ANALOG &= ~this->m_pin;	
+
+if(OE)
+	this->m_port->OE |= this->m_pin;
+else
+	this->m_port->OE &= ~this->m_pin;	
+
+	this->m_port->PULL &= ~(this->m_pin);//Убираем подтяжку от "0"
+	this->m_port->PULL &= ~(this->m_pin << 16);//Убираем подтяжку от "1"	
+	this->m_port->FUNC |= (2 << ((this->m_pin-1)*2));
+}
 /*
 Переключение фугнкции пина
 */

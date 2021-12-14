@@ -48,7 +48,8 @@ class PortMapIO{
 	void setPinAsOff();
 	void setPinAsOutput();
 	void setPinAsAnalog();
-	uint16_t PortMapIoPORT_Read(uint16_t *data);
+	void setPinAsAlternative(uint8_t digital, uint8_t OE);
+	uint16_t PortMapIoPORT_Read();
 	void PortMapIoPORT_Write(uint16_t *data);
 	uint16_t getPin(){return m_pin;}
 
