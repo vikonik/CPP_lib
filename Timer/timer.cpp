@@ -15,9 +15,9 @@ TIMER::TIMER(){}
 	
 /*
 	Период счета таймера в микросекундах
-	
+	в одной секунде 1М микросекунд
 	*/	
-void TIMER::init(uint16_t period_us){
+void TIMER::init(uint32_t period_us){
 	TIMER_CntInitTypeDef TIMxInit;
 	
 	TIMER_DeInit(TIMERx); //Задание начельных значений регистров для таймера.	
@@ -31,15 +31,24 @@ void TIMER::init(uint16_t period_us){
 	TIMER_BRGInit(TIMERx, TIMER_HCLKdiv1); 
 	TIMER_CntStructInit(&TIMxInit);
 
+  uint16_t prescaler = 1;
 	uint32_t x1 =	SystemCoreClock/1000000;//Столько импульсов на одну микросекунду
 	uint32_t x2 = x1 * period_us;//столько импульсов на на период обновления
+while(x2 > 0xFFFF){
+prescaler *= 2;
+x2 /= 2;
+}
+
 	// Задаем параметры счета
-	TIMxInit.TIMER_Prescaler   	= 0; 	
-	TIMxInit.TIMER_Period   		= x2; 
-	
+	TIMxInit.TIMER_Prescaler   	= prescaler-1; 	
+	TIMxInit.TIMER_Period   		= x2-1; 
+	TIMER_CntInit(TIMERx, &TIMxInit);
+
 	// Включение прерывания от таймера
-	if(TIMERx == MDR_TIMER1)//Включение тактирования таймера
+	if(TIMERx == MDR_TIMER1){//Включение тактирования таймера
 			NVIC_EnableIRQ(Timer1_IRQn);
+TIMER_ITConfig(TIMERx,TIMER_STATUS_CNT_ARR,ENABLE);
+}
 	if(TIMERx == MDR_TIMER2)
 			NVIC_EnableIRQ(Timer2_IRQn);
 	if(TIMERx == MDR_TIMER3)

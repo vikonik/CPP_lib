@@ -38,7 +38,7 @@ void SPI::init(uint16_t wordLenght){
 	else
 		SPI_InitStructure.SSP_WordLength = SSP_WordLength8b;
 	
-SSP_BRGInit(this->spi,SSP_HCLKdiv1);
+SSP_BRGInit(this->spi,SSP_HCLKdiv16);
 	SSP_Init(this->spi, &SPI_InitStructure);	
 	SSP_Cmd(this->spi, ENABLE);	
 }

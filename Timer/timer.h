@@ -9,7 +9,7 @@ public:
 TIMER();
 TIMER(MDR_TIMER_TypeDef* _TIMERx, uint32_t period_us);
 ~TIMER();
-void init(uint16_t period_us);
+void init(uint32_t period_us);
 
 private:
 MDR_TIMER_TypeDef* TIMERx;
