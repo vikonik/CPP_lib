@@ -47,12 +47,17 @@ x2 /= 2;
 	// Включение прерывания от таймера
 	if(TIMERx == MDR_TIMER1){//Включение тактирования таймера
 			NVIC_EnableIRQ(Timer1_IRQn);
-TIMER_ITConfig(TIMERx,TIMER_STATUS_CNT_ARR,ENABLE);
+      
 }
-	if(TIMERx == MDR_TIMER2)
+	if(TIMERx == MDR_TIMER2){
 			NVIC_EnableIRQ(Timer2_IRQn);
+
+}
 	if(TIMERx == MDR_TIMER3)
 			NVIC_EnableIRQ(Timer3_IRQn);  
+
+TIMER_ITConfig(TIMERx,TIMER_STATUS_CNT_ARR,ENABLE);
+
 	// Установка приоритета прерывания
 	
 	// NVIC_SetPriority(TIMER1_IRQn, 0);

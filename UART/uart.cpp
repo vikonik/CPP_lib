@@ -77,11 +77,11 @@ void UART::enableIRQ(){
 /**/
 void UART::sendByte(uint8_t byte){
 	/* Check TXFE flag*/
-   while (UART_GetFlagStatus (MDR_UART2,UART_FLAG_BUSY)){};//UART_FLAG_TXFE!= SET UART_FLAG_BUSY
+   while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY)){};//UART_FLAG_TXFE!= SET UART_FLAG_BUSY
 
    /* Send Data from UART1 */
-   UART_SendData (MDR_UART2,byte);//MDR_UART2
-	while (UART_GetFlagStatus (MDR_UART2,UART_FLAG_BUSY)){};
+   UART_SendData (currentUART,byte);//MDR_UART2
+	while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY)){};
 }
 
 /**/
