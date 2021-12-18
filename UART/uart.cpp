@@ -13,6 +13,9 @@ UART::UART(MDR_UART_TypeDef* UARTx, uint32_t _UART_BaudRate, uint16_t _UART_Word
   UART_InitTypeDef uart;
   UART_DeInit(UARTx);
   UART_StructInit(&uart);
+if(UARTx == MDR_UART1)
+  RST_CLK_PCLKcmd(RST_CLK_PCLK_UART1, ENABLE);
+if(UARTx == MDR_UART2)
   RST_CLK_PCLKcmd(RST_CLK_PCLK_UART2, ENABLE);
   uart.UART_BaudRate = _UART_BaudRate;
   uart.UART_WordLength = _UART_WordLength;

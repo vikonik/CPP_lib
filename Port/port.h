@@ -2,7 +2,7 @@
 #define _PORT_H
 //#ifdef USE_MDR1986VE9x
 //#include "MDR1986VE1T.h"                // Device header
-//#include "MDR32F9Qx_port.h"             // Keil::Drivers:PORT
+#include "MDR32F9Qx_port.h"             // Keil::Drivers:PORT
 #include "MDR32F9Qx_config.h"
 
 #ifdef __cplusplus

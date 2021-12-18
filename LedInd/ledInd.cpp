@@ -124,7 +124,7 @@ switch(dgt){
 
 if(digit & 0x80){
 switch(digit){
-//Управление светодиодами
+//Управление светодиодами уровня назрузки
 case 0x80:
 		seg_A->setLow();
 		seg_B->setLow();

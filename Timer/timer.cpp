@@ -46,15 +46,15 @@ x2 /= 2;
 
 	// Включение прерывания от таймера
 	if(TIMERx == MDR_TIMER1){//Включение тактирования таймера
-			NVIC_EnableIRQ(Timer1_IRQn);
+			NVIC_EnableIRQ(TIMER1_IRQn);
       
 }
 	if(TIMERx == MDR_TIMER2){
-			NVIC_EnableIRQ(Timer2_IRQn);
+			NVIC_EnableIRQ(TIMER2_IRQn);
 
 }
 	if(TIMERx == MDR_TIMER3)
-			NVIC_EnableIRQ(Timer3_IRQn);  
+			NVIC_EnableIRQ(TIMER3_IRQn);  
 
 TIMER_ITConfig(TIMERx,TIMER_STATUS_CNT_ARR,ENABLE);
 

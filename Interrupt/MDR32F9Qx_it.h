@@ -24,9 +24,9 @@
 #define __MDR32F9QX_IT_H
 
 //#include "MDR32Fx.h"
-#include "MDR1986VE1T.h"                // Device header
+#include "MDR32F9Qx_config.h"
 
-
+extern "C"{
 
 void NMI_Handler(void);
 void HardFault_Handler(void);
@@ -58,7 +58,7 @@ void EXT_INT1_IRQHandler(void);
 void EXT_INT2_IRQHandler(void);
 void EXT_INT3_IRQHandler(void);
 void EXT_INT4_IRQHandler(void);
-
+}
 #endif /* __MDR32F9QX_IT_H */
 
 /******************* (C) COPYRIGHT 2011 Milandr *********/
