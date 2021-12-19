@@ -20,6 +20,9 @@ void IRQ_ON();
 void setChannel(uint32_t Channel);
 void setChannels(uint32_t ChannelMask);
 void Start();
+void Stop();
+void switchToSinglConversion();
+void switchToCicliclConversion();
 uint16_t readData();
 	private:
 		PortMapIO *adcPin;

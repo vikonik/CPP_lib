@@ -101,12 +101,30 @@ void ADC::setChannels(uint32_t ChannelMask){
 void ADC::Start(){
   MDR_ADC->ADC1_CFG |= ADC1_CFG_REG_GO;
 }
-
+/*
+Остановка преобразования АЦП
+*/
+void ADC::Stop(){
+  MDR_ADC->ADC1_CFG &= ~ADC1_CFG_REG_GO;
+}
+/*
+Включить одиночные проебразования
+*/
+void ADC::switchToSinglConversion(){
+MDR_ADC->ADC1_CFG &= ~ADC1_CFG_REG_SAMPLE;
+}
+/*
+Включить последовательное проебразования
+*/
+void ADC::switchToCicliclConversion(){
+MDR_ADC->ADC1_CFG |= ADC1_CFG_REG_SAMPLE;
+}
 /*
 Чтение данных от АЦП
 */
 uint16_t ADC::readData(){
-	return (uint16_t)(ADC1_GetResult() & 0x00000FFF);
+uint32_t tmp = ADC1_GetResult();
+	return (uint16_t)(tmp & 0x00000FFF);
 }
 
 
