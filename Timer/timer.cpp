@@ -124,3 +124,14 @@ TIMER_ITConfig(TIMERx,TIMER_STATUS_CNT_ARR,ENABLE);
 //TIMER_Cmd(MDR_TIMER2, ENABLE); 
 
 //}
+
+
+void TIMER::timerStart(){
+this->TIMERx->CNT = 0;
+this->TIMERx->CNTRL = 1;
+}
+void TIMER::timerStop(){
+
+this->TIMERx->CNTRL = 0;
+this->TIMERx->CNT = 0;
+}

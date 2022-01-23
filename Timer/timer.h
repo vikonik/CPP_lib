@@ -10,7 +10,8 @@ TIMER();
 TIMER(MDR_TIMER_TypeDef* _TIMERx, uint32_t period_us);
 ~TIMER();
 void init(uint32_t period_us);
-
+void timerStart();
+void timerStop();
 private:
 MDR_TIMER_TypeDef* TIMERx;
 };
