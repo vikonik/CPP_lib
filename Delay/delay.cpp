@@ -9,6 +9,7 @@ DELAY::DELAY(){
 
 void DELAY::delayInit(void){
 	//SystemCoreClock = 72000000;
+SystemCoreClockUpdate();
   SysTick_Config(SystemCoreClock/1000);
 
 }

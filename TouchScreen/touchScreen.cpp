@@ -1,5 +1,5 @@
 #include "touchScreen.h"
-#include "portMapin.h"
+//#include "portMapin.h"
 TOUCHSCREEN::TOUCHSCREEN( 
 							PortMapIO *Xp,	
 							PortMapIO *Xm,

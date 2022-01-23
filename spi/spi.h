@@ -11,7 +11,7 @@ class SPI : public PortMapIO{
 SPI();		
 SPI(MDR_SSP_TypeDef *spi);
 SPI(MDR_SSP_TypeDef *spi, PortMapIO *MOSI, PortMapIO *MISO, PortMapIO *SCK);
-SPI(MDR_SSP_TypeDef *spi, MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, uint8_t regim);
+SPI(MDR_SSP_TypeDef *spi, MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, uint8_t regim, PORT_FUNC_TypeDef portFunc);
 	
 	uint8_t transmit(uint8_t *data);
   void write_then_read(uint8_t *write_buffer,
@@ -21,7 +21,7 @@ SPI(MDR_SSP_TypeDef *spi, MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, 
 
 	private:
 		void init(uint8_t regim);
-    void initPort(MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK);
+    void initPort(MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, PORT_FUNC_TypeDef portFunc);
 
 	MDR_SSP_TypeDef *spi;
 	MDR_PORT_TypeDef *PORT;

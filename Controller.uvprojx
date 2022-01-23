@@ -336,9 +336,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>USE_MDR1986VE1T</Define>
+              <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865;.\RCC</IncludePath>
+              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865;.\RCC;.\W25Qxx;.\ADC</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -385,7 +385,7 @@
             <File>
               <FileName>main.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>.\Objects\main\main.cpp</FilePath>
+              <FilePath>.\main\main.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -545,21 +545,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Test</GroupName>
-          <Files>
-            <File>
-              <FileName>test.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\Test\test.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>test.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\Test\test.h</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Delay</GroupName>
           <Files>
             <File>
@@ -650,6 +635,21 @@
           </Files>
         </Group>
         <Group>
+          <GroupName>W25Qxx</GroupName>
+          <Files>
+            <File>
+              <FileName>W25Qxx.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\W25Qxx\W25Qxx.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>W25Qxx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\W25Qxx\W25Qxx.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
           <GroupName>::Device</GroupName>
         </Group>
         <Group>
@@ -662,63 +662,63 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="Device" Cgroup="Startup" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BE1T">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="ADC" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="ADC" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="DMA" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="DMA" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="PORT" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="PORT" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="RST_CLK" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="RST_CLK" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="SSP" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="SSP" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="TIMER" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="TIMER" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="UART" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="UART" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9_UART_DENPENDENCIES_RST_CLK">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
-      <component Cclass="Drivers" Cgroup="WWDG" Cvendor="Keil" Cversion="1.5" condition="CON_MDR1986BXX">
-        <package name="MDR1986BExx" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="Keil" version="1.51"/>
+      <component Cclass="Drivers" Cgroup="WWDG" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR32F9">
+        <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
         <targetInfos>
           <targetInfo name="Target 1"/>
         </targetInfos>
       </component>
     </components>
     <files>
-      <file attr="config" category="linkerScript" name="IDE\Keil\scatter\MDR32Fx\MDR1986VE1T.sct">
+      <file attr="config" category="linkerScript" name="IDE\Keil\scatter\MDR32Fx\MDR1986VE1T.sct" version="2.0.3">
         <instance index="0">RTE\Device\MDR1986BE1T\MDR1986VE1T.sct</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T"/>
         <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
@@ -726,7 +726,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="header" name="Libraries\SPL\MDR32Fx\MDR32F9Qx_config.h">
+      <file attr="config" category="header" name="Libraries\SPL\MDR32Fx\MDR32F9Qx_config.h" version="2.0.3">
         <instance index="0">RTE\Device\MDR1986BE1T\MDR32F9Qx_config.h</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T"/>
         <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
@@ -734,7 +734,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="source" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\startup_MDR1986VE1T.S">
+      <file attr="config" category="source" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\startup_MDR1986VE1T.S" version="2.0.3">
         <instance index="0">RTE\Device\MDR1986BE1T\startup_MDR1986VE1T.S</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T"/>
         <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
@@ -742,7 +742,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="source" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\system_MDR1986VE1T.c">
+      <file attr="config" category="source" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\system_MDR1986VE1T.c" version="2.0.3">
         <instance index="0">RTE\Device\MDR1986BE1T\system_MDR1986VE1T.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T"/>
         <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>
@@ -750,7 +750,7 @@
           <targetInfo name="Target 1"/>
         </targetInfos>
       </file>
-      <file attr="config" category="header" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\system_MDR1986VE1T.h">
+      <file attr="config" category="header" name="Libraries\CMSIS\MDR32Fx\DeviceSupport\MDR1986VE1T\startup\arm\system_MDR1986VE1T.h" version="2.0.3">
         <instance index="0">RTE\Device\MDR1986BE1T\system_MDR1986VE1T.h</instance>
         <component Cclass="Device" Cgroup="Startup" Cvariant="1. Rev.6+" Cvendor="Keil" Cversion="2.0.3" condition="CON_MDR1986VE1T"/>
         <package license="License.txt" name="MDR1986BExx" schemaVersion="1.2" supportContact="https://support.milandr.ru/" url="https://ic.milandr.ru/soft/" vendor="Keil" version="2.0.3"/>

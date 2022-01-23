@@ -65,7 +65,7 @@ extern "C" {
 // #define USE_MDR1986VE93
 // #define USE_MDR1986VE94
 // #define USE_MDR1986VE1T_REV3_4
-// #define USE_MDR1986VE1T_REV6
+ #define USE_MDR1986VE1T_REV6
 // #define USE_MDR1986VE3T_REV2
 // #define USE_MDR1986VE3T_REV3
 // #define USE_MDR1901VC1T
@@ -96,7 +96,7 @@ extern "C" {
 // <i> Specifies level of legacy support. If legacy support is not needed, outcomment this definition or change default value.
 // <i> Support for the legacy version is removed after 2 updates.
 // <i> Default value for version 2.0.x: 153 - to support previous version (1.5.3)
-#define MDR_LEGACY_SUPPORT 153
+//#define MDR_LEGACY_SUPPORT 153
 
 
 #if (defined(USE_MDR1986VE9x) || defined (USE_MDR1901VC1T))
@@ -123,7 +123,7 @@ extern "C" {
 #define HSI_Value       ((uint32_t)8000000)
 // <o> HSE clock value [Hz]
 // <i> Default: 8000000 (8MHz)
-#define HSE_Value       ((uint32_t)8000000)
+#define HSE_Value       ((uint32_t)7372800)
 // <o> HSE2 clock value [Hz] for MDR1986VE1 and MDR1986VE3
 // <i> Default: 25000000 (25MHz)
 #define HSE2_Value      ((uint32_t)25000000)

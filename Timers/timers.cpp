@@ -40,7 +40,7 @@ void TIMER::init(MDR_TIMER_TypeDef* TIMERx){
 	Timer.TIMER_BRK_Polarity = TIMER_BRKPolarity_NonInverted;		
 	Timer.TIMER_CounterDirection = 	TIMER_CntDir_Up;
 	Timer.TIMER_CounterMode = TIMER_CntMode_ClkFixedDir;
-	Timer.TIMER_EventSource = TIMER_EvSrc_None;
+//	Timer.TIMER_EventSource = TIMER_EvSrc_None;
 	Timer.TIMER_FilterSampling = TIMER_FDTS_TIMER_CLK_div_1;
 	Timer.TIMER_IniCounter = 0;
 	Timer.TIMER_Period = 1;//ARR(Модуль счета)

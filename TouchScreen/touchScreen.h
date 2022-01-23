@@ -1,6 +1,6 @@
 #ifndef _TOUCH_SCREEN_H_
 #define _TOUCH_SCREEN_H_
-#include "MDR1986VE1T.h"                // Device header
+
 #include "port.h"
 #include "delay.h"
 #include "ADC.h"

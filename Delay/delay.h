@@ -17,6 +17,7 @@
 //#ifdef __cplusplus
 //}
 //#endif
+extern 	uint32_t tickDelay;
 
 class DELAY{
 	public:

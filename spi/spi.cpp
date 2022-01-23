@@ -18,16 +18,17 @@ SPI::SPI(MDR_SSP_TypeDef *spi,
 	init(0);
 }
 
-SPI::SPI(MDR_SSP_TypeDef *spi, MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, uint8_t regim)
+SPI::SPI(MDR_SSP_TypeDef *spi, MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, uint8_t regim, PORT_FUNC_TypeDef portFunc)
 :spi(spi){
-  initPort( port, MOSI,  MISO,  SCK);
+  initPort( port, MOSI,  MISO,  SCK, portFunc);
 init(regim);
 }
  /**/
-void SPI::initPort(MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK){
-  mosi = new PortMapIO(port, MOSI,PORT_OE_OUT,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,PORT_FUNC_MAIN,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
-  miso = new PortMapIO(port, MISO,PORT_OE_IN,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,PORT_FUNC_MAIN,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
-  sck  = new PortMapIO(port, SCK,PORT_OE_OUT,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,PORT_FUNC_MAIN,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
+void SPI::initPort(MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_t SCK, PORT_FUNC_TypeDef portFunc){
+
+  mosi = new PortMapIO(port, MOSI,PORT_OE_OUT,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,portFunc,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
+  miso = new PortMapIO(port, MISO,PORT_OE_IN,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,portFunc,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
+  sck  = new PortMapIO(port, SCK,PORT_OE_OUT,PORT_PULL_UP_OFF, PORT_PULL_DOWN_OFF,PORT_PD_SHM_OFF,PORT_PD_DRIVER,PORT_GFEN_OFF,portFunc,PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL );
 
 
 //MDR_PORT_TypeDef *port, 
@@ -45,9 +46,9 @@ void SPI::initPort(MDR_PORT_TypeDef *port, uint16_t MOSI, uint16_t MISO, uint16_
 /**/
 void SPI::init(uint8_t regim){
 		SSP_InitTypeDef SPI_InitStructure;
-		if(spi == MDR_SSP1)	RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP1, ENABLE);	
-    if(spi == MDR_SSP2) RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP2, ENABLE);	
-    SSP_BRGInit(MDR_SSP2, SSP_HCLKdiv16 );
+		if(spi == MDR_SSP1){	RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP1, ENABLE);	SSP_BRGInit(MDR_SSP1, SSP_HCLKdiv2 );}
+    if(spi == MDR_SSP2){ RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP2, ENABLE);	SSP_BRGInit(MDR_SSP2, SSP_HCLKdiv16 );}
+
     SSP_StructInit(&SPI_InitStructure);	
     SPI_InitStructure.SSP_CPSDVSR	= 0;
     SPI_InitStructure.SSP_FRF = SSP_FRF_SPI_Motorola;
