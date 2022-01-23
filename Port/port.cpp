@@ -101,7 +101,7 @@ void PortMapIO::setHigh()
 
 uint8_t PortMapIO::getStatus()
 {
-	return PORT_ReadInputDataBit(this->m_port,this->m_pin);
+	return PORT_ReadInputDataBit(this->m_port,(PORT_Pin_TypeDef)this->m_pin);
 //	return _status;
 }
 

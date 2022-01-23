@@ -47,6 +47,7 @@ void SPI::init(uint8_t regim){
 		SSP_InitTypeDef SPI_InitStructure;
 		if(spi == MDR_SSP1)	RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP1, ENABLE);	
     if(spi == MDR_SSP2) RST_CLK_PCLKcmd(RST_CLK_PCLK_SSP2, ENABLE);	
+SSP_BRGInit(MDR_SSP2, SSP_HCLKdiv16 );
     SSP_StructInit(&SPI_InitStructure);	
     SPI_InitStructure.SSP_CPSDVSR	= 255;
     SPI_InitStructure.SSP_FRF = SSP_FRF_SPI_Motorola;
