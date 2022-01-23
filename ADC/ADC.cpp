@@ -25,7 +25,7 @@ void ADC::init(){
 
 ADC_InitStructure.ADC_IntVRefConversion = ADC_VREF_CONVERSION_Disable;
 ADC_InitStructure.ADC_IntVRefTrimming = 7;
-ADC_InitStructure.ADC_StartDelay = 15;
+//ADC_InitStructure.ADC_StartDelay = 15;
 ADC_InitStructure.ADC_TempSensor = ADC_TEMP_SENSOR_Disable;
 ADC_InitStructure.ADC_TempSensorAmplifier = ADC_TEMP_SENSOR_AMPLIFIER_Disable;
 ADC_InitStructure.ADC_TempSensorConversion = ADC_TEMP_SENSOR_CONVERSION_Disable;
@@ -53,7 +53,7 @@ ADC_InitStructure.ADC_TempSensorConversion = ADC_TEMP_SENSOR_CONVERSION_Disable;
 
 
 
-ADCx_InitStructure.ADC_ChannelNumber = 3;
+ADCx_InitStructure.ADC_ChannelNumber = ADC_CH_ADC3;
 ADCx_InitStructure.ADC_Channels = 0;
 ADCx_InitStructure.ADC_ChannelSwitching = ADC_CH_SWITCHING_Disable;
 ADCx_InitStructure.ADC_ClockSource = ADC_CLOCK_SOURCE_CPU;
@@ -63,7 +63,7 @@ ADCx_InitStructure.ADC_IntVRefSource = ADC_INT_VREF_SOURCE_INEXACT;
 ADCx_InitStructure.ADC_LevelControl = ADC_LEVEL_CONTROL_Disable;
 ADCx_InitStructure.ADC_LowLevel = 0;
 ADCx_InitStructure.ADC_Prescaler = ADC_CLK_div_64;
-ADCx_InitStructure.ADC_SamplingMode = ADC_SAMPLING_MODE_CICLIC_CONV;//  ADC_SAMPLING_MODE_SINGLE_CONV
+ADCx_InitStructure.ADC_SamplingMode = ADC_SAMPLING_MODE_CYCLIC_CONV;//  ADC_SAMPLING_MODE_SINGLE_CONV
 ADCx_InitStructure.ADC_VRefSource = ADC_VREF_SOURCE_INTERNAL;
 
 
@@ -85,7 +85,7 @@ void ADC::IRQ_ON(){
 Устанавливаем канал для преобразования
 */
 void ADC::setChannel(uint32_t Channel){
-  ADC1_SetChannel(Channel);
+  ADC1_SetChannel((ADCx_Channel_Number)Channel);
 }
 
 /*

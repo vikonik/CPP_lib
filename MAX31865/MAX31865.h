@@ -61,7 +61,7 @@ public:
   void enableBias(bool b);
 
   double temperature(double RTDnominal, double refResistor);
-
+void  readAllReg(void);
 private:
    SPI *spi_dev;
    PortMapIO *spi_cs;

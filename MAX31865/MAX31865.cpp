@@ -217,6 +217,19 @@ uint16_t  MAX31865::readRTD(void) {
   return rtd;
 }
 
+/**************************************************************************/
+/*!
+    @brief Читаем все регистры микросхемы
+    @return 
+*/
+/**************************************************************************/
+
+void  MAX31865::readAllReg(void){
+static uint8_t allReg[8] = {0};
+readRegisterN(0,allReg,8);
+while(1);
+} 
+
 /**********************************************/
 
 uint8_t  MAX31865::readRegister8(uint8_t addr) {
@@ -238,10 +251,19 @@ uint16_t  MAX31865::readRegister16(uint8_t addr) {
 }
 
 void  MAX31865::readRegisterN(uint8_t addr, uint8_t buffer[],
-                                      uint8_t n) {
+                                     uint8_t n) {
+uint8_t nullData = 0;
   addr &= 0x7F; // make sure top bit is not set
+//MAX31865_EN;
+//  spi_dev->write_then_read(&addr, 1, buffer, n);
+//MAX31865_DES;
+
 MAX31865_EN;
-  spi_dev->write_then_read(&addr, 1, buffer, n);
+spi_dev->transmit(&addr);//Отправили адрес
+//Прочитали нужное количество байт
+for(uint8_t i = 0; i < n; i++){
+  buffer[i] = spi_dev->transmit(&nullData);
+}
 MAX31865_DES;
 }
 
