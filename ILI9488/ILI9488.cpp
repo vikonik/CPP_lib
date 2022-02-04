@@ -403,9 +403,55 @@ backColor565 = color;
 		_transparent=false;
 	}
 }
-/**/
+
+/*
+
+*/
 void ILI9488::drawImage(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
+uint8_t ch = 0;
+uint16_t byteCnt = 0;
+	if ((x >= _width) || (y >= _height))
+		return;
+	if ((x + w - 1) >= _width)
+		w = _width - x;
+	if ((y + h - 1) >= _height)
+		h = _height - y;
+	setAddrWindow(x, y, x + w - 1, y + h - 1);//Выделили область экрана
+SEND_DATA;
+SELECT_DISPLAY;
+//Шлем картинку
+for(int j = 0; j < (w/8*h); j++)//j-текущий столбик
+{
+  ch = img[byteCnt];
+  for(int i=0;i<8;i++)
+  {   
+    if((ch&(1<<(7-i)))!=0)   
+    {
+      this->setPixel(color565);
+    } 
+    else
+    {
+      this->setPixel(backColor565);
+    }   
+  }
+  byteCnt++;
+}
+DESELECT_DISPLAY;
+}
+
+
+/*Масштабируемый рисунок
+Может масштабировать рисуноктолько рисунок 16*16 точек
+x, y - кооржинаты начала
+w, h ширина и высота, должны быть 16 
+*/
+void ILI9488::drawImageScale(uint8_t scale, const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+{
+uint8_t data = 0;
+uint16_t byteCnt = 0;
+uint16_t tmpX = w*scale;
+uint16_t tmpY = h*scale;
 
 	if ((x >= _width) || (y >= _height))
 		return;
@@ -413,32 +459,37 @@ void ILI9488::drawImage(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, 
 		w = _width - x;
 	if ((y + h - 1) >= _height)
 		h = _height - y;
-	setAddrWindow(x, y, x + w - 1, y + h - 1);
+
+	setAddrWindow(x,y,x+tmpX-1,y+tmpY-1);//Определяем окно для символа
 SEND_DATA;
 SELECT_DISPLAY;
+//Шлем картинку
+for(int j = 0; j < (w/8*h)/2; j++)//j-текущий столбик
+{
 
-	
-//	uint8_t linebuff[w * 3 + 1];
-//	uint32_t count = 0;
-//	for (uint16_t i = 0; i < h; i++) {
-//		uint16_t pixcount = 0;
-//		for (uint16_t o = 0; o < w; o++) {
-//			uint8_t b1 = img[count];
-//			count++;
-//			uint8_t b2 = img[count];
-//			count++;
-//			uint16_t color = b1 << 8 | b2;
-//			linebuff[pixcount] = (((color & 0xF800) >> 11) * 255) / 31;
-//			pixcount++;
-//			linebuff[pixcount] = (((color & 0x07E0) >> 5) * 255)	/ 63;
-//			pixcount++;
-//			linebuff[pixcount] = ((color & 0x001F) * 255) / 31;
-//			pixcount++;
-//		}
-////		HAL_SPI_Transmit(_spi->getHandler(), linebuff, w * 3, 100);
+		for(int l = 0; l < scale; l++)
+			for(int k = 0; k < 2; k++){
+				data = img[byteCnt+k];
 
-//	}
+				for(uint8_t i=0;i<8;i++)
+				{   
+					if((data & (1<<(7-i))) != 0)   
+					{
+            for(uint8_t m = 0; m < scale; m++){
+              this->setPixel(color565);
+            }
+					} 
+					else
+					{
+            for(uint8_t m = 0; m < scale; m++){
+              this->setPixel(backColor565);
+            }
 
+					}  
+				}
+			}
+			byteCnt +=2;
+}
 DESELECT_DISPLAY;
 }
 
@@ -592,7 +643,32 @@ setColor(color);
     }
   }
 }
-
+/**
+*@brief 
+Рисуем рамку прямоугольника цветом color, 
+после отрисовки возвращаем предыдущий цвет обратно
+*@param
+*/
+void ILI9488::drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
+{
+	
+	if ((x >= _width) || (y >= _height))
+		return;
+	if ((x + w - 1) >= _width)
+		w = _width - x;
+	if ((y + h - 1) >= _height)
+		h = _height - y;
+	uint16_t tmpColor = this->getColor();
+	setColor(color);
+	setAddrWindow(x, y, x + w - 1, y + h - 1);
+//		void drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
+//		void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
+		 drawFastHLine( x,  y,  w,  color);//Верхняя граница 
+		 drawFastHLine( x,  y+h,  w,  color);//Нижняя граница
+		 drawFastVLine( x,  y,  h,  color);//Левая граница
+		 drawFastVLine( x+w,  y,  h,  color);//Правая граница
+	setColor(tmpColor);	
+}
 /*
 Рисуем прямоугольник цветом, 
 после отрисовки возвращаем предыдущий цвет обратно
@@ -620,9 +696,8 @@ SELECT_DISPLAY;
 	}
 DESELECT_DISPLAY;
 	setColor(tmpColor);	
-
-
 }
+
 /**/
 void ILI9488::drawCircle(int x, int y, int radius)
 {

@@ -14,6 +14,7 @@
 #include "port.h"
 #include "delay.h"
 #include "DefaultFonts.h"
+#include "GraphicObj.h"
 
 #define PORTRAIT 0
 #define LANDSCAPE 1
@@ -184,6 +185,8 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void pushColor(uint16_t color);
 		void pushColors(uint16_t *data, uint8_t len, uint8_t first);
 		void drawImage(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+    void drawImageScale(uint8_t scale, const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+
 		void fillScreen(uint16_t color);
     void setPixel();
     void setPixel(uint16_t color);
@@ -193,6 +196,7 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
 		void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,uint16_t color);
 		void writeLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1,uint16_t color);
+		void drawRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 		void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 		void drawCircle(int x, int y, int radius);
 		void fillCircle(int x, int y, int radius);
