@@ -200,6 +200,8 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
 		void drawCircle(int x, int y, int radius);
 		void fillCircle(int x, int y, int radius);
+void drawTriangle( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint16_t color);
+
 		void setRotation(uint8_t r);
 		void invertDisplay(uint8_t  i);
 		uint16_t setColor565(uint8_t r, uint8_t g, uint8_t b);

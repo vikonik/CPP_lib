@@ -762,6 +762,14 @@ void ILI9488::fillCircle(int x, int y, int radius)
 }
 
 
+/*Треугольник*/
+void ILI9488::drawTriangle( uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t x3, uint16_t y3, uint16_t color)
+{
+	drawLine( x1, y1, x2, y2, color);
+	drawLine( x2, y2, x3, y3, color);
+	drawLine( x3, y3, x1, y1, color);
+}
+
 
 /**/
 void ILI9488::setRotation(uint8_t r)
