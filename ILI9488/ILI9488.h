@@ -14,6 +14,7 @@
 #include "port.h"
 #include "delay.h"
 #include "DefaultFonts.h"
+#include "TimeNewRomanRus.h"
 #include "GraphicObj.h"
 
 #define PORTRAIT 0
@@ -221,8 +222,9 @@ uint8_t getFontXsize();
 uint8_t getFontYsize();
 void	print(char *st, int size, int x, int y, int deg=0);
 void	_print(char *st, int x, int y, int deg=0);
-
-    void printChar(uint8_t c, int x, int y);
+void  _print(char *st, int x, int y, int deg, uint8_t flip);
+void printChar(uint8_t c, int x, int y);
+void printChar(uint8_t c, int x, int y, uint8_t flip);
 void printChar_x2(uint8_t c, int x, int y);
 
 uint16_t getBackColor(){return backColor565;}

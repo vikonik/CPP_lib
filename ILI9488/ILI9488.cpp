@@ -977,7 +977,6 @@ uint8_t ILI9488::getFontYsize()
 {
 	return cfont.y_size;
 }
-
 /*Упрощенная версия*/
 void ILI9488::printChar(uint8_t c, int x, int y){
 	uint16_t temp, i, j;
@@ -1017,6 +1016,71 @@ void ILI9488::printChar(uint8_t c, int x, int y){
 				for(i=0;i<8;i++)
 				{   
 					if((ch&(1<<(7-i)))!=0)   
+					{
+						this->setPixel(color565);
+					} 
+  
+				}
+				temp++;
+			}	
+DESELECT_DISPLAY;
+	}
+
+}
+/*Упрощенная версия*/
+void ILI9488::printChar(uint8_t c, int x, int y, uint8_t flip){
+	uint16_t temp, i, j;
+uint8_t tmpChar;
+uint8_t tmpBit;
+//setXY
+	setAddrWindow(x,y,x+cfont.x_size-1,y+cfont.y_size-1);//Определяем окно для символа
+	temp=((c-cfont.offset)*((cfont.x_size/8)*cfont.y_size))+4;//4-это смещение от начала массива да длину служебных байт
+	
+	//cfont.x_size/8 Количество байт для одного столбика
+	//(cfont.x_size/8)*cfont.y_size
+	if (!_transparent){
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
+			{
+
+if(!flip){
+  tmpChar=*(&cfont.font[temp]);
+}
+else{
+tmpChar = 0;
+  tmpBit = *(&cfont.font[temp]);
+  for(uint8_t i = 0; i < 8; i++){
+    if(tmpBit & (1<< i)){
+      tmpChar |= (1 << (7-i));
+    }
+  }
+}
+
+				for(i=0;i<8;i++)
+				{   
+					if((tmpChar&(1<<(7-i)))!=0)   
+					{
+						this->setPixel(color565);
+					} 
+					else
+					{
+						this->setPixel(backColor565);
+					}   
+				}
+				temp++;
+			}	
+    DESELECT_DISPLAY;
+	}
+	else{
+    SEND_DATA;
+    SELECT_DISPLAY;
+	for(j=0;j<((cfont.x_size/8)*cfont.y_size);j++)//j-текущий столбик
+			{
+				tmpChar=*(&cfont.font[temp]);
+				for(i=0;i<8;i++)
+				{   
+					if((tmpChar&(1<<(7-i)))!=0)   
 					{
 						this->setPixel(color565);
 					} 
@@ -1144,16 +1208,45 @@ void ILI9488::print(char *st, int size, int x, int y, int deg)
 //			rotateChar(*st++, x, y, i, deg);
 }
 
-/*-*/
+/*
+Печатаем как есть
+*/
 void ILI9488::_print(char *st, int x, int y, int deg)
 {
 int8_t i = 0;
-while(*st)
-//	for (i=0; i<stl; i++)
-//		if (deg==0)
-			printChar(*st++, x + (i++ *(cfont.x_size)), y);
-//		else
-//			rotateChar(*st++, x, y, i, deg);
+char tmp = 0;
+while(*st){
+
+if(*st == (char)0xD0 || *st == (char)0xD1  ){
+  st++;
+} 
+    printChar(*st++, x + (i++ *(cfont.x_size)), y);
+
+}
+}
+
+/*Отражаем текст слева на право*/
+void ILI9488::_print(char *st, int x, int y, int deg, uint8_t flip)
+{
+int8_t i = 0;
+char tmp = 0;
+char tmpBit = 0;
+while(*st){
+
+tmp = *st;//Это для пробела
+if(*st == (char)0xD0 ){
+  st++;
+tmp = *st;
+} 
+ if(*st == (char)0xD1 ){
+st++;
+tmp = *st;
+tmp +=0x40;
+}
+if(tmp == 0x20)tmp = 143;
+printChar(tmp, x + (i++ *(cfont.x_size)), y,flip);
+st++;
+}
 }
 /**/
 
