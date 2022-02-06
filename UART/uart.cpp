@@ -1,34 +1,36 @@
-#include "uart.h"
-#include "MDR32F9Qx_rst_clk.h"          // Keil::Drivers:RST_CLK
-
 /*
 Перед созданием экземпляра класса нужно настроить порты и
 RST_CLK_PCLKcmd(RST_CLK_PCLK_UART1, ENABLE);
-
 */
+
+#include "uart.h"
+#include "MDR32F9Qx_rst_clk.h"          // Keil::Drivers:RST_CLK
+
+
 UART::UART(MDR_UART_TypeDef* UARTx, uint32_t _UART_BaudRate, uint16_t _UART_WordLength, uint16_t _UART_StopBits,uint16_t _UART_Parity, uint16_t _UART_FIFOMode, uint16_t _UART_HardwareFlowControl )
 :currentUART(UARTx)
 {
 
-  UART_InitTypeDef uart;
+ // UART_InitTypeDef uart;
   UART_DeInit(UARTx);
-  UART_StructInit(&uart);
+  UART_StructInit(&strucktUART_InitTypeDef);
 if(UARTx == MDR_UART1)
   RST_CLK_PCLKcmd(RST_CLK_PCLK_UART1, ENABLE);
 if(UARTx == MDR_UART2)
   RST_CLK_PCLKcmd(RST_CLK_PCLK_UART2, ENABLE);
-  uart.UART_BaudRate = _UART_BaudRate;
-  uart.UART_WordLength = _UART_WordLength;
-  uart.UART_StopBits = _UART_StopBits;
-  uart.UART_Parity = _UART_Parity;
-  uart.UART_FIFOMode = _UART_FIFOMode;
-  uart.UART_HardwareFlowControl = _UART_HardwareFlowControl;
+  strucktUART_InitTypeDef.UART_BaudRate = _UART_BaudRate;
+  strucktUART_InitTypeDef.UART_WordLength = _UART_WordLength;
+  strucktUART_InitTypeDef.UART_StopBits = _UART_StopBits;
+  strucktUART_InitTypeDef.UART_Parity = _UART_Parity;
+  strucktUART_InitTypeDef.UART_FIFOMode = _UART_FIFOMode;
+  strucktUART_InitTypeDef.UART_HardwareFlowControl = _UART_HardwareFlowControl;
 
-  UART_Init(UARTx, &uart);
+  UART_Init(UARTx, &strucktUART_InitTypeDef);
   UART_BRGInit(UARTx,UART_HCLKdiv1);
-  UART_ITConfig (UARTx, UART_IT_RX, ENABLE);
+ // UART_ITConfig (UARTx, UART_IT_RX, ENABLE);
   UART_Cmd(UARTx, ENABLE);
 }
+
 
 /**
   * @brief  Enables or disables the specified UART interrupts.
@@ -103,8 +105,31 @@ void UART::sendString(char *data){
 	while (UART_GetFlagStatus (currentUART,UART_FLAG_BUSY ) );//UART_FLAG_TXFE!= SET
 }
 
-/**/
+/*
+Именение скорости
+*/
+void UART::changeSpeed(uint32_t newSpeed){
 
+  UART_Cmd(currentUART,DISABLE);
+
+ // UART_DeInit(UARTx);
+ // UART_StructInit(&uart);
+if(currentUART == MDR_UART1)
+  RST_CLK_PCLKcmd(RST_CLK_PCLK_UART1, ENABLE);
+if(currentUART == MDR_UART2)
+  RST_CLK_PCLKcmd(RST_CLK_PCLK_UART2, ENABLE);
+  strucktUART_InitTypeDef.UART_BaudRate = newSpeed;
+//  uart.UART_WordLength = _UART_WordLength;
+//  uart.UART_StopBits = _UART_StopBits;
+// uart.UART_Parity = _UART_Parity;
+//  uart.UART_FIFOMode = _UART_FIFOMode;
+// uart.UART_HardwareFlowControl = _UART_HardwareFlowControl;
+
+  UART_Init(currentUART, &strucktUART_InitTypeDef);
+  UART_BRGInit(currentUART,UART_HCLKdiv1);
+ // UART_ITConfig (currentUART, UART_IT_RX, ENABLE);
+  UART_Cmd(currentUART, ENABLE);
+}
 
 
 

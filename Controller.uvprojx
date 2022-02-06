@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865;.\RCC;.\W25Qxx;.\ADC</IncludePath>
+              <IncludePath>.\Relay;.\spi;.\Port;.\TFT_module;.\Timers;.\TouchScreen;.\ILI9488;.\Interrupt;.\Test;.\Delay;.\spi;.\MAX31865;.\RCC;.\W25Qxx;.\ADC;.\DS18B20;.\OWI;.\UART</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -646,6 +646,56 @@
               <FileName>W25Qxx.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\W25Qxx\W25Qxx.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>DS18B20</GroupName>
+          <Files>
+            <File>
+              <FileName>DS18B20.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\DS18B20\DS18B20.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>DS18B20.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\DS18B20\DS18B20.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>OWI</GroupName>
+          <Files>
+            <File>
+              <FileName>OWIBitFunctions.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OWI\OWIBitFunctions.h</FilePath>
+            </File>
+            <File>
+              <FileName>OWIdefs.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OWI\OWIdefs.h</FilePath>
+            </File>
+            <File>
+              <FileName>OWIPolled.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OWI\OWIPolled.h</FilePath>
+            </File>
+            <File>
+              <FileName>OWISWBitFunctions.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\OWI\OWISWBitFunctions.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>OWI.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\OWI\OWI.h</FilePath>
+            </File>
+            <File>
+              <FileName>OWI.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\OWI\OWI.cpp</FilePath>
             </File>
           </Files>
         </Group>

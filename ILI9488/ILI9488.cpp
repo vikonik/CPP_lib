@@ -238,6 +238,81 @@ DESELECT_DISPLAY;//ILI9488_DISPOFF
 }
 
 /**/
+void  ILI9488::displaySleepIN(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(0x10);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+/**/
+void  ILI9488::displaySleepOUT(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(0x11);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+
+/**/
+void  ILI9488::displayNormaModeON(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(0x12);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+
+/**/
+void  ILI9488::displayAllPixelOff(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(0x22);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+/**/
+void  ILI9488::displayAllPixelOn(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(0x23);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+/**/
+void  ILI9488::displayOFF(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(ILI9488_DISPOFF);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+
+
+
+/**/
+void  ILI9488::displayON(){
+this->delay_ms(120);
+
+SELECT_DISPLAY;
+	writecommand(ILI9488_DISPON);    //Display on ILI9488_DISPON
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+
+/**/
+void ILI9488::setBrightnes(uint8_t value){
+this->delay_ms(120);
+SELECT_DISPLAY;
+	writecommand(0x53);    //Display on ILI9488_DISPON
+writedata(0x2C);    //2-dot
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+
+SELECT_DISPLAY;
+	writecommand(0x51);    //Display on ILI9488_DISPON
+writedata(value);    //2-dot
+DESELECT_DISPLAY;//ILI9488_DISPOFF
+}
+/**/
 void ILI9488::setOrientation(uint8_t orientation){
 SELECT_DISPLAY;
 	writecommand(0x36);      //Memory Access

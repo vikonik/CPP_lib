@@ -15,9 +15,15 @@ void sendByte(uint8_t byte);
 void sendBytes(uint8_t *data, uint16_t size);
 /**/
 void sendString(char *data);
-
+/**/
+MDR_UART_TypeDef *getUart(){return currentUART;}
+/**/
+void disableUart(){UART_Cmd(currentUART,DISABLE);}
+/**/
+void changeSpeed(uint32_t newSpeed);
 
 private:
+  UART_InitTypeDef strucktUART_InitTypeDef;
 MDR_UART_TypeDef* currentUART;
 
 };

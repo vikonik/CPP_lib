@@ -169,6 +169,15 @@ class ILI9488 : public PortMapIO, public DELAY
 						PortMapIO *pTFT_RS_Y,PortMapIO *pTFT_RD,PortMapIO *pTFT_WR, MDR_PORT_TypeDef *dataPort);
 void testPin();
 		void begin(void);
+void  displaySleepIN();
+void  displaySleepOUT();
+void  displayNormaModeON();
+void  displayAllPixelOff();
+void  displayAllPixelOn();
+void  displayOFF();
+void  displayON();
+
+void setBrightnes(uint8_t value);
 void setOrientation(uint8_t orientation);
 void readPixelFormat(void);
 		void hardReset(void);

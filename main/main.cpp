@@ -1,44 +1,62 @@
 #include "MDR32F9Qx_config.h"           // Keil::Device:Startup
 #include "port.h"
 #include "spi.h"
-#include "w25qxx.h"
 #include "delay.h"
 #include "MDR32F9Qx_it.h"
-PortMapIO *cs_w25qxx ;
-SPI *spi;
-DELAY *pause;
+#include "RCC.h"
+#include "uart.h"
+#include "OWI.h"
 extern 	uint32_t tickDelay;
-uint16_t a = 0;
-uint8_t buf1[256];
-uint8_t buf2[512];
-uint8_t PageStatus = 0;
-uint8_t init1 = 0;
-uint8_t init2 = 0;
+DELAY *pause;
+#define PORT_UART     MDR_PORTC
+#define PIN_UART_RX   PORT_Pin_4
+#define PIN_UART_TX   PORT_Pin_3
+
+uint8_t detectPresent = 0;
+uint8_t TEM[9];	
+uint8_t TEMP_H = 0;
+uint8_t TEMP_L=0;
+uint32_t temperature = 0;
+
 
 int main(void){
+RCC rcc(144);
+PortMapIO *uartRX = new PortMapIO(MDR_PORTC, 
+PIN_UART_RX,PORT_OE_IN,
+PORT_PULL_UP_OFF,PORT_PULL_DOWN_OFF,
+PORT_PD_SHM_OFF, PORT_PD_OPEN,
+PORT_GFEN_OFF,PORT_FUNC_MAIN, 
+PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL);
 
-pause = new DELAY;
- cs_w25qxx = new PortMapIO(MDR_PORTC, PORT_Pin_8);
- spi = new SPI(MDR_SSP1, MDR_PORTC,PORT_Pin_5, PORT_Pin_6, PORT_Pin_7, 0,PORT_FUNC_ALTER);
-init1 = W25qxx_Init();
-	W25qxx_ResetChip();
-init2 = W25qxx_Init();
+PortMapIO *uartTX = new PortMapIO(MDR_PORTC, 
+PIN_UART_TX,PORT_OE_OUT,
+PORT_PULL_UP_OFF,PORT_PULL_DOWN_OFF,
+PORT_PD_SHM_OFF, PORT_PD_DRIVER,
+PORT_GFEN_OFF,PORT_FUNC_MAIN, 
+PORT_SPEED_MAXFAST,PORT_MODE_DIGITAL);
 
-//for(int i = 0; i < w25qxx.BlockCount; i++){
-//if(W25qxx_IsEmptyBlock(i,0,0))PageStatus++;
-//}
+UART *uart = new UART(MDR_UART1,9600,UART_WordLength8b,UART_StopBits1,UART_Parity_No,UART_FIFO_OFF,UART_HardwareFlowControl_RXE|UART_HardwareFlowControl_TXE);
+OWI *owi = new OWI(uart);
 
 
-W25qxx_EraseSector(W25qxx_PageToSector(0));
-for(int i = 0; i < 256; i++)buf1[i] = i;
-//W25qxx_WriteByte(buf1[1], 0);
-//W25qxx_WriteByte(buf1[2], 1);
-//W25qxx_WriteByte(buf1[3], 2);
-W25qxx_WritePage(buf1,0,0,0);
-//for(int i = 0; i < 256; i++)buf1[i] = 0;
-W25qxx_ReadPage(buf2, 0, 0, 0);
-//W25qxx_Init();
+//uart->sendByte(0xF0);
+//detectPresent = UART_ReceiveData(MDR_UART1);
+//uart->sendByte(0xF0);
+detectPresent = owi->detectPresence();
+
 while(1){
-a++;
+//
+owi->readTemp(TEM);
+temperature = TEM[1];
+temperature <<= 8;
+temperature |= TEM[0];
+temperature *= 625;
+
+TEMP_H = temperature/10000;
+temperature -= (TEMP_H * 10000);
+TEMP_L = temperature/100;
+//
+for(int i=0; i< 0xFFFF; i++);
+
 }
 }
