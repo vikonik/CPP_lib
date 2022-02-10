@@ -515,6 +515,91 @@ for(int j = 0; j < (w/8*h); j++)//j-текущий столбик
 DESELECT_DISPLAY;
 }
 
+/*
+Рисуем картинку цветными точками
+*/
+void ILI9488::drawPiktureRGB565(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+{
+uint16_t color = 0;
+uint8_t ch = 0;
+uint16_t byteCnt = 0;
+	if ((x >= _width) || (y >= _height))
+		return;
+	if ((x + w - 1) >= _width)
+		w = _width - x;
+	if ((y + h - 1) >= _height)
+		h = _height - y;
+	setAddrWindow(x, y, x + w - 1, y + h - 1);//Выделили область экрана
+SEND_DATA;
+SELECT_DISPLAY;
+//Шлем картинку
+for(int j = 0; j < (w*h); j++)//(w*h)Столько точек в картинке всего
+{
+color = img[byteCnt+1];
+color <<= 8;
+color |=img[byteCnt];
+
+if(color != 0xFFFF)
+this->setPixel(color);
+else
+this->setPixel(backColor565);
+
+  byteCnt += 2;
+}
+DESELECT_DISPLAY;
+}
+
+/*
+VМасштабируем картинку цветными точками
+*/
+void ILI9488::drawPiktureRGB565Scale(uint8_t scale, const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+{
+uint16_t color = 0;
+uint8_t ch = 0;
+uint16_t byteCnt = 0;
+uint16_t tmpX = w*scale;
+uint16_t tmpY = h*scale;
+	if ((x >= _width) || (y >= _height))
+		return;
+	if ((x + w - 1) >= _width)
+		w = _width - x;
+	if ((y + h - 1) >= _height)
+		h = _height - y;
+	setAddrWindow(x,y,x+tmpX-1,y+tmpY-1);//Определяем окно для картинки
+SEND_DATA;
+SELECT_DISPLAY;
+//Шлем картинку
+for(int j = 0; j < (h); j++)//h - Столько строчек в картинке всего
+{
+for(int l = 0; l < scale; l++){//Столько раз повторять строку 
+ for(int column = 0; column < w ; column++ ){//Столько столбиков в исходной строке
+		
+byteCnt = j *w*2 + column*2;
+
+		color = img[byteCnt+1];
+    color <<= 8;
+    color |=img[byteCnt];	
+
+					if(color != 0xFFFF)  
+					{
+            for(uint8_t m = 0; m < scale; m++){
+              this->setPixel(color);
+            }
+					} 
+					else
+					{
+            for(uint8_t m = 0; m < scale; m++){
+              this->setPixel(FON_COLOR);
+            }
+
+					}
+ }
+}		
+	
+			
+}
+DESELECT_DISPLAY;
+}
 
 /*Масштабируемый рисунок
 Может масштабировать рисуноктолько рисунок 16*16 точек

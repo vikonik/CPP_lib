@@ -195,6 +195,8 @@ void setXY(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
 		void pushColor(uint16_t color);
 		void pushColors(uint16_t *data, uint8_t len, uint8_t first);
 		void drawImage(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+void drawPiktureRGB565(const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
+void drawPiktureRGB565Scale(uint8_t scale, const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
     void drawImageScale(uint8_t scale, const uint8_t* img, uint16_t x, uint16_t y, uint16_t w, uint16_t h);
 
 		void fillScreen(uint16_t color);
